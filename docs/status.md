@@ -37,7 +37,7 @@ Current state of the project. Update in the same PR as the change.
 | Mobile tests | **23 passed** (`flutter test --coverage`) |
 | Mobile coverage | **92.2%** (268 lines, gate ≥ 50%) |
 | Ruff / Black | clean (`ruff check`, `black --check`, 95 files) |
-| Flutter analyze | **0 errors**; 23 info-level lints remain |
+| Flutter analyze | **No issues found** (0 errors, 0 infos) |
 | L10n parity | **310 EN / 310 AR** keys, no gaps (`mobile/tool/check_l10n.py`) |
 | CI | workflows committed; first run happens after the repository is pushed |
 | Smoke script | `scripts/smoke.cmd` passes 21 checks against the running backend (health, login, auth/me, catalog, records, goals, dashboard, AI status, 401, admin login) |
@@ -50,10 +50,8 @@ Current state of the project. Update in the same PR as the change.
 
 - Failure/loading/empty screenshot variants and the Arabic welcome/register
   screens are not captured yet; see the gap table in `docs/screenshots/README.md`.
-- 23 info-level analyzer lints remain across four style rules
-  (`use_build_context_synchronously`, `unnecessary_string_interpolations`,
-  `prefer_initializing_formals`, `use_null_aware_elements`); there are **0 errors**
-  and they are tracked for cleanup.
+- Analyzer is clean: **0 errors and 0 infos**. The previous style lints were fixed
+  with mounted guards, null-aware collection elements, and interpolation cleanups.
 - The OpenRouter key is intentionally blank in the demo environment, so AI
   screens are captured in deterministic fallback mode (`ai_disabled` /
   rules-based summaries). Production deployment requires a server-side key.

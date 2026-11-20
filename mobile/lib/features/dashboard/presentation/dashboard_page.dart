@@ -163,7 +163,11 @@ class _DashboardContent extends StatelessWidget {
             gradient: const LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [AppColors.forestDeep, AppColors.forest, Color(0xFF2A8465)],
+              colors: [
+                AppColors.forestDeep,
+                AppColors.forest,
+                Color(0xFF2A8465),
+              ],
             ),
             borderRadius: BorderRadius.circular(28),
           ),
@@ -182,12 +186,15 @@ class _DashboardContent extends StatelessWidget {
                   ),
                   const Spacer(),
                   Pill(
-                    label: '${direction == 'up' ? '+' : ''}${formatPercent(changePercent, locale: locale)}',
+                    label:
+                        '${direction == 'up' ? '+' : ''}${formatPercent(changePercent, locale: locale)}',
                     color: Colors.white.withValues(alpha: 0.14),
                     foreground: Colors.white,
                     icon: direction == 'down'
                         ? Icons.trending_down_rounded
-                        : (direction == 'up' ? Icons.trending_up_rounded : Icons.trending_flat_rounded),
+                        : (direction == 'up'
+                              ? Icons.trending_up_rounded
+                              : Icons.trending_flat_rounded),
                   ),
                 ],
               ),
@@ -243,7 +250,10 @@ class _DashboardContent extends StatelessWidget {
                   Expanded(
                     child: _HeroStat(
                       label: l10n.t('avgPerDay'),
-                      value: formatNumber(n(totals['avg_kg_per_day']), locale: locale),
+                      value: formatNumber(
+                        n(totals['avg_kg_per_day']),
+                        locale: locale,
+                      ),
                     ),
                   ),
                   Container(
@@ -256,7 +266,9 @@ class _DashboardContent extends StatelessWidget {
                       label: l10n.t('topCategory'),
                       value: top.isEmpty
                           ? '—'
-                          : (locale == 'ar' ? s(top['name_ar']) : s(top['name_en'])),
+                          : (locale == 'ar'
+                                ? s(top['name_ar'])
+                                : s(top['name_en'])),
                     ),
                   ),
                 ],
@@ -283,7 +295,10 @@ class _DashboardContent extends StatelessWidget {
                 Expanded(
                   child: Text(
                     l10n.t('aiDisabledBody'),
-                    style: const TextStyle(fontSize: 12, color: AppColors.muted),
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.muted,
+                    ),
                   ),
                 ),
               ],
@@ -309,7 +324,8 @@ class _DashboardContent extends StatelessWidget {
                         locale: locale,
                         isLast: i == categories.length - 1,
                       ),
-                      if (i != categories.length - 1) const SizedBox(height: 15),
+                      if (i != categories.length - 1)
+                        const SizedBox(height: 15),
                     ],
                   ],
                 ),
@@ -404,10 +420,25 @@ class _QuickActions extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = context.l10n;
     final items = [
-      (Icons.add_rounded, l10n.t('addRecord'), '/records/new', AppColors.forest),
+      (
+        Icons.add_rounded,
+        l10n.t('addRecord'),
+        '/records/new',
+        AppColors.forest,
+      ),
       (Icons.flag_outlined, l10n.t('goals'), '/goals', const Color(0xFF3F6FA8)),
-      (Icons.route_outlined, l10n.t('plans'), '/plans', const Color(0xFF8C5A2B)),
-      (Icons.auto_awesome_rounded, l10n.t('assistant'), '/assistant', const Color(0xFF5B4B8A)),
+      (
+        Icons.route_outlined,
+        l10n.t('plans'),
+        '/plans',
+        const Color(0xFF8C5A2B),
+      ),
+      (
+        Icons.auto_awesome_rounded,
+        l10n.t('assistant'),
+        '/assistant',
+        const Color(0xFF5B4B8A),
+      ),
     ];
     return Row(
       children: [
@@ -420,7 +451,10 @@ class _QuickActions extends StatelessWidget {
                 onRefresh();
               },
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 13, horizontal: 6),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 13,
+                  horizontal: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.paper,
                   borderRadius: BorderRadius.circular(16),
@@ -434,7 +468,10 @@ class _QuickActions extends StatelessWidget {
                       items[i].$2,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                        fontSize: 9.5,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ],
                 ),
@@ -465,10 +502,16 @@ class _InsightCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.auto_awesome_rounded, size: 18, color: AppColors.forest),
+              const Icon(
+                Icons.auto_awesome_rounded,
+                size: 18,
+                color: AppColors.forest,
+              ),
               const SizedBox(width: 8),
               Pill(
-                label: source == 'ai' ? 'AI · openrouter/free' : l10n.t('aiRules'),
+                label: source == 'ai'
+                    ? 'AI · openrouter/free'
+                    : l10n.t('aiRules'),
                 color: AppColors.paper,
                 foreground: AppColors.forest,
               ),
@@ -479,7 +522,11 @@ class _InsightCard extends StatelessWidget {
             s(summary['narrative']),
             maxLines: 5,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(fontSize: 12.5, height: 1.55, color: AppColors.ink),
+            style: const TextStyle(
+              fontSize: 12.5,
+              height: 1.55,
+              color: AppColors.ink,
+            ),
           ),
           const SizedBox(height: 10),
           Row(
@@ -532,12 +579,18 @@ class _CategoryRow extends StatelessWidget {
                   Expanded(
                     child: Text(
                       category.name(locale),
-                      style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   Text(
                     '${formatKg(n(row['emissions_kg']), locale: locale)} ${context.tr('kg')}',
-                    style: const TextStyle(fontSize: 11.5, fontWeight: FontWeight.w700),
+                    style: const TextStyle(
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ],
               ),
@@ -579,7 +632,10 @@ class _GoalCard extends StatelessWidget {
                 ),
                 Text(
                   '${achieved.round()}',
-                  style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w800),
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w800,
+                  ),
                 ),
               ],
             ),
@@ -593,18 +649,24 @@ class _GoalCard extends StatelessWidget {
                   s(goal['title']),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: 3),
                 Text(
                   '${formatKg(n(goal['current_emissions_kg']), locale: locale)} / ${formatKg(n(goal['target_emissions_kg']), locale: locale)} kg',
-                  style: const TextStyle(fontSize: 10.5, color: AppColors.muted),
+                  style: const TextStyle(
+                    fontSize: 10.5,
+                    color: AppColors.muted,
+                  ),
                 ),
               ],
             ),
           ),
           Pill(
-            label: '${formatPercent(achieved, locale: locale)}',
+            label: formatPercent(achieved, locale: locale),
             color: AppColors.mint,
             foreground: AppColors.forest,
           ),
@@ -623,7 +685,9 @@ class _RecentRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categoryJson = record['category'];
-    final category = categoryJson is Map ? Category.fromJson(map(categoryJson)) : null;
+    final category = categoryJson is Map
+        ? Category.fromJson(map(categoryJson))
+        : null;
     final date = DateTime.tryParse(s(record['activity_date']));
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -637,7 +701,10 @@ class _RecentRow extends StatelessWidget {
               children: [
                 Text(
                   category?.name(locale) ?? '—',
-                  style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                  style: const TextStyle(
+                    fontSize: 12.5,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(

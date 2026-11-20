@@ -20,11 +20,9 @@ class _InsightsPageState extends State<InsightsPage> {
   String _period = 'month';
   late AsyncCubit<Map<String, dynamic>> _cubit;
 
-  Future<Map<String, dynamic>> _load() =>
-      context.read<CarbonRepository>().aiInsights(
-            period: _period,
-            locale: context.l10n.locale.languageCode,
-          );
+  Future<Map<String, dynamic>> _load() => context
+      .read<CarbonRepository>()
+      .aiInsights(period: _period, locale: context.l10n.locale.languageCode);
 
   @override
   void initState() {
@@ -93,10 +91,16 @@ class _InsightsPageState extends State<InsightsPage> {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.auto_awesome_rounded, size: 18, color: AppColors.forest),
+                          const Icon(
+                            Icons.auto_awesome_rounded,
+                            size: 18,
+                            color: AppColors.forest,
+                          ),
                           const SizedBox(width: 8),
                           Pill(
-                            label: source == 'ai' ? 'AI · openrouter/free' : l10n.t('aiRules'),
+                            label: source == 'ai'
+                                ? 'AI · openrouter/free'
+                                : l10n.t('aiRules'),
                           ),
                         ],
                       ),
@@ -114,14 +118,18 @@ class _InsightsPageState extends State<InsightsPage> {
                     Expanded(
                       child: _MetricTile(
                         label: l10n.t('totalEmissions'),
-                        value: '${formatKg(n(contextData['total_kg']), locale: locale)} ${l10n.t('kg')}',
+                        value:
+                            '${formatKg(n(contextData['total_kg']), locale: locale)} ${l10n.t('kg')}',
                       ),
                     ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: _MetricTile(
                         label: l10n.t('vsPrevious'),
-                        value: '${formatPercent(n(contextData['change_percent']), locale: locale)}',
+                        value: formatPercent(
+                          n(contextData['change_percent']),
+                          locale: locale,
+                        ),
                       ),
                     ),
                   ],
@@ -138,12 +146,19 @@ class _InsightsPageState extends State<InsightsPage> {
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Icon(Icons.circle, size: 6, color: AppColors.forest),
+                                const Icon(
+                                  Icons.circle,
+                                  size: 6,
+                                  color: AppColors.forest,
+                                ),
                                 const SizedBox(width: 10),
                                 Expanded(
                                   child: BidiText(
                                     observation,
-                                    style: const TextStyle(fontSize: 11.5, height: 1.45),
+                                    style: const TextStyle(
+                                      fontSize: 11.5,
+                                      height: 1.45,
+                                    ),
                                   ),
                                 ),
                               ],
@@ -159,7 +174,10 @@ class _InsightsPageState extends State<InsightsPage> {
                   child: sources.isEmpty
                       ? Text(
                           l10n.t('noReports'),
-                          style: const TextStyle(color: AppColors.muted, fontSize: 12),
+                          style: const TextStyle(
+                            color: AppColors.muted,
+                            fontSize: 12,
+                          ),
                         )
                       : Column(
                           children: [
@@ -184,7 +202,10 @@ class _InsightsPageState extends State<InsightsPage> {
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    formatPercent(n(sources[i]['share_percent']), locale: locale),
+                                    formatPercent(
+                                      n(sources[i]['share_percent']),
+                                      locale: locale,
+                                    ),
                                     style: const TextStyle(
                                       fontSize: 10.5,
                                       fontWeight: FontWeight.w700,
@@ -193,8 +214,11 @@ class _InsightsPageState extends State<InsightsPage> {
                                 ],
                               ),
                               const SizedBox(height: 6),
-                              MetricBar(value: n(sources[i]['share_percent']) / 100),
-                              if (i != sources.length - 1) const SizedBox(height: 13),
+                              MetricBar(
+                                value: n(sources[i]['share_percent']) / 100,
+                              ),
+                              if (i != sources.length - 1)
+                                const SizedBox(height: 13),
                             ],
                           ],
                         ),
@@ -207,7 +231,10 @@ class _InsightsPageState extends State<InsightsPage> {
                       l10n.isArabic
                           ? 'لا توجد فرص من الكتالوج لهذه الفترة.'
                           : 'No catalog opportunities for this period yet.',
-                      style: const TextStyle(fontSize: 11.5, color: AppColors.muted),
+                      style: const TextStyle(
+                        fontSize: 11.5,
+                        color: AppColors.muted,
+                      ),
                     ),
                   )
                 else
@@ -235,7 +262,10 @@ class _InsightsPageState extends State<InsightsPage> {
                               locale == 'ar'
                                   ? s(opportunity['title_ar'])
                                   : s(opportunity['title_en']),
-                              style: const TextStyle(fontSize: 11.5, height: 1.4),
+                              style: const TextStyle(
+                                fontSize: 11.5,
+                                height: 1.4,
+                              ),
                             ),
                           ),
                           if (s(opportunity['source']) == 'ai_text')
@@ -248,7 +278,11 @@ class _InsightsPageState extends State<InsightsPage> {
                 const SizedBox(height: 16),
                 Text(
                   s(data['disclaimer']),
-                  style: const TextStyle(fontSize: 9.5, color: AppColors.muted, height: 1.45),
+                  style: const TextStyle(
+                    fontSize: 9.5,
+                    color: AppColors.muted,
+                    height: 1.45,
+                  ),
                 ),
               ],
             );

@@ -100,29 +100,46 @@ class _SettingsPageState extends State<SettingsPage> {
                 CarbonCard(
                   child: Row(
                     children: [
-                      const Icon(Icons.translate_rounded, size: 20, color: AppColors.forest),
+                      const Icon(
+                        Icons.translate_rounded,
+                        size: 20,
+                        color: AppColors.forest,
+                      ),
                       const SizedBox(width: 11),
                       Expanded(
                         child: Text(
                           l10n.t('appLanguage'),
-                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
                       SegmentedButton<String>(
                         segments: [
-                          ButtonSegment(value: 'en', label: Text(l10n.t('english'))),
-                          ButtonSegment(value: 'ar', label: Text(l10n.t('arabic'))),
+                          ButtonSegment(
+                            value: 'en',
+                            label: Text(l10n.t('english')),
+                          ),
+                          ButtonSegment(
+                            value: 'ar',
+                            label: Text(l10n.t('arabic')),
+                          ),
                         ],
                         selected: {settings.locale.languageCode},
                         showSelectedIcon: false,
                         style: ButtonStyle(
                           visualDensity: VisualDensity.compact,
                           textStyle: WidgetStateProperty.all(
-                            const TextStyle(fontSize: 10, fontWeight: FontWeight.w700),
+                            const TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                            ),
                           ),
                         ),
-                        onSelectionChanged: (value) =>
-                            context.read<SettingsCubit>().setLanguage(value.first),
+                        onSelectionChanged: (value) => context
+                            .read<SettingsCubit>()
+                            .setLanguage(value.first),
                       ),
                     ],
                   ),
@@ -146,33 +163,57 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: Column(
                     children: [
                       ListTile(
-                        leading: const Icon(Icons.lock_outline_rounded, size: 21),
+                        leading: const Icon(
+                          Icons.lock_outline_rounded,
+                          size: 21,
+                        ),
                         title: Text(
                           l10n.t('changePassword'),
-                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                        trailing: const Icon(Icons.chevron_right_rounded, size: 19),
-                        onTap: () => _showPasswordDialog(context),
+                        trailing: const Icon(
+                          Icons.chevron_right_rounded,
+                          size: 19,
+                        ),
+                        onTap: () => _showPasswordDialog(),
                       ),
                       if (user?.organizationId != null)
                         ListTile(
                           leading: const Icon(Icons.business_rounded, size: 21),
                           title: Text(
                             l10n.t('organizationProfile'),
-                            style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                            style: const TextStyle(
+                              fontSize: 12.5,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
-                          trailing: const Icon(Icons.chevron_right_rounded, size: 19),
+                          trailing: const Icon(
+                            Icons.chevron_right_rounded,
+                            size: 19,
+                          ),
                           onTap: () => context.push('/organization'),
                         ),
                       ListTile(
-                        leading: const Icon(Icons.info_outline_rounded, size: 21),
+                        leading: const Icon(
+                          Icons.info_outline_rounded,
+                          size: 21,
+                        ),
                         title: Text(
                           l10n.t('about'),
-                          style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w600),
+                          style: const TextStyle(
+                            fontSize: 12.5,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                         trailing: const Text(
                           'v1.0.0',
-                          style: TextStyle(fontSize: 10, color: AppColors.muted),
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: AppColors.muted,
+                          ),
                         ),
                       ),
                     ],
@@ -202,7 +243,7 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  Future<void> _showPasswordDialog(BuildContext context) async {
+  Future<void> _showPasswordDialog() async {
     final current = TextEditingController();
     final next = TextEditingController();
     final formKey = GlobalKey<FormState>();
@@ -218,7 +259,9 @@ class _SettingsPageState extends State<SettingsPage> {
               TextFormField(
                 controller: current,
                 obscureText: true,
-                decoration: InputDecoration(labelText: context.tr('currentPassword')),
+                decoration: InputDecoration(
+                  labelText: context.tr('currentPassword'),
+                ),
                 validator: (value) => (value ?? '').length < 8
                     ? context.tr('validationError')
                     : null,
@@ -227,7 +270,9 @@ class _SettingsPageState extends State<SettingsPage> {
               TextFormField(
                 controller: next,
                 obscureText: true,
-                decoration: InputDecoration(labelText: context.tr('newPassword')),
+                decoration: InputDecoration(
+                  labelText: context.tr('newPassword'),
+                ),
                 validator: (value) => (value ?? '').length < 8
                     ? context.tr('validationError')
                     : null,
@@ -254,9 +299,9 @@ class _SettingsPageState extends State<SettingsPage> {
     if (saved != true || !mounted) return;
     try {
       await context.read<CarbonRepository>().changePassword(
-            currentPassword: current.text,
-            newPassword: next.text,
-          );
+        currentPassword: current.text,
+        newPassword: next.text,
+      );
       if (!mounted) return;
       showSnack(context, context.tr('passwordChanged'));
     } catch (error) {
@@ -354,7 +399,9 @@ class _ProfileEditorState extends State<_ProfileEditor> {
     super.initState();
     final user = context.read<AuthCubit>().state.user;
     _name = TextEditingController(text: user?.fullName ?? '');
-    _alias = TextEditingController(text: s(widget.profile['leaderboard_alias']));
+    _alias = TextEditingController(
+      text: s(widget.profile['leaderboard_alias']),
+    );
     _household = ni(widget.profile['household_size'], 1).clamp(1, 20);
     _optIn = widget.profile['leaderboard_opt_in'] == true;
   }
@@ -375,7 +422,8 @@ class _ProfileEditorState extends State<_ProfileEditor> {
       await repo.updateProfile({
         'household_size': _household,
         'leaderboard_opt_in': _optIn,
-        if (_alias.text.trim().isNotEmpty) 'leaderboard_alias': _alias.text.trim(),
+        if (_alias.text.trim().isNotEmpty)
+          'leaderboard_alias': _alias.text.trim(),
       });
       if (!mounted) return;
       showSnack(context, context.tr('saved'));
@@ -399,14 +447,18 @@ class _ProfileEditorState extends State<_ProfileEditor> {
           const SizedBox(height: 7),
           TextFormField(
             controller: _name,
-            decoration: const InputDecoration(prefixIcon: Icon(Icons.person_outline_rounded)),
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.person_outline_rounded),
+            ),
           ),
           const SizedBox(height: 15),
           Text(l10n.t('householdSize'), style: _labelStyle),
           const SizedBox(height: 7),
           DropdownButtonFormField<int>(
             initialValue: _household,
-            decoration: const InputDecoration(prefixIcon: Icon(Icons.groups_outlined)),
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.groups_outlined),
+            ),
             items: [
               for (var i = 1; i <= 10; i++)
                 DropdownMenuItem(value: i, child: Text('$i')),
@@ -449,7 +501,10 @@ class _ProfileEditorState extends State<_ProfileEditor> {
                 ? const SizedBox(
                     width: 18,
                     height: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
                   )
                 : Text(l10n.t('saveChanges')),
           ),
@@ -459,10 +514,10 @@ class _ProfileEditorState extends State<_ProfileEditor> {
   }
 
   TextStyle get _labelStyle => const TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-        color: AppColors.ink,
-      );
+    fontSize: 11,
+    fontWeight: FontWeight.w700,
+    color: AppColors.ink,
+  );
 }
 
 class _AiCard extends StatelessWidget {
@@ -487,7 +542,11 @@ class _AiCard extends StatelessWidget {
                   color: AppColors.mint,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.auto_awesome_rounded, color: AppColors.forest, size: 18),
+                child: const Icon(
+                  Icons.auto_awesome_rounded,
+                  color: AppColors.forest,
+                  size: 18,
+                ),
               ),
               const SizedBox(width: 11),
               Expanded(
@@ -496,12 +555,18 @@ class _AiCard extends StatelessWidget {
                   children: [
                     Text(
                       enabled ? l10n.t('aiEnabled') : l10n.t('aiDisabled'),
-                      style: const TextStyle(fontSize: 12.5, fontWeight: FontWeight.w700),
+                      style: const TextStyle(
+                        fontSize: 12.5,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       '${l10n.t('model')}: ${s(ai?['model'], 'openrouter/free')}',
-                      style: const TextStyle(fontSize: 9.5, color: AppColors.muted),
+                      style: const TextStyle(
+                        fontSize: 9.5,
+                        color: AppColors.muted,
+                      ),
                     ),
                   ],
                 ),
@@ -520,12 +585,18 @@ class _AiCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     '${l10n.t('aiStatus')} · ${ni(budget['remaining'])} / ${ni(budget['daily_token_limit'])}',
-                    style: const TextStyle(fontSize: 9.5, color: AppColors.muted),
+                    style: const TextStyle(
+                      fontSize: 9.5,
+                      color: AppColors.muted,
+                    ),
                   ),
                 ),
                 Text(
                   '${ni(budget['used_today'])}',
-                  style: const TextStyle(fontSize: 9.5, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                    fontSize: 9.5,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),

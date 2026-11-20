@@ -108,7 +108,7 @@ scripts\smoke.cmd
 ```
 
 Latest local results: backend **54 tests / 76%**, mobile **23 tests / 92.2%**, analyzer
-**0 errors**, ruff/black clean. Coverage gates are **50%** on both sides and run in CI.
+**clean**, ruff/black clean. Coverage gates are **50%** on both sides and run in CI.
 
 ## Deliverables
 

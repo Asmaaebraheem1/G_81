@@ -76,7 +76,8 @@ class _GoalsPageState extends State<GoalsPage> {
             silent: true,
           ),
           child: AsyncPageBody<List<Goal>>(
-            onRetry: () => _cubit.run(() => context.read<CarbonRepository>().goals()),
+            onRetry: () =>
+                _cubit.run(() => context.read<CarbonRepository>().goals()),
             builder: (goals) {
               if (goals.isEmpty) {
                 return ListView(
@@ -133,7 +134,11 @@ class _GoalTile extends StatelessWidget {
                   color: AppColors.mint,
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(Icons.flag_rounded, color: AppColors.forest, size: 20),
+                child: const Icon(
+                  Icons.flag_rounded,
+                  color: AppColors.forest,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -141,7 +146,10 @@ class _GoalTile extends StatelessWidget {
                   goal.title,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               Pill(
@@ -161,13 +169,19 @@ class _GoalTile extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          '${formatPercent(goal.achievedPercent, locale: locale)}',
-                          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800),
+                          formatPercent(goal.achievedPercent, locale: locale),
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.w800,
+                          ),
                         ),
                         const SizedBox(width: 5),
                         Text(
                           l10n.t('achieved'),
-                          style: const TextStyle(fontSize: 10, color: AppColors.muted),
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.muted,
+                          ),
                         ),
                       ],
                     ),
@@ -177,7 +191,10 @@ class _GoalTile extends StatelessWidget {
                     Text(
                       '${formatKg(goal.currentKg, locale: locale)} / ${formatKg(goal.targetKg, locale: locale)} ${l10n.t('kgCo2e')}',
                       textDirection: TextDirection.ltr,
-                      style: const TextStyle(fontSize: 10, color: AppColors.muted),
+                      style: const TextStyle(
+                        fontSize: 10,
+                        color: AppColors.muted,
+                      ),
                     ),
                   ],
                 ),
@@ -188,7 +205,10 @@ class _GoalTile extends StatelessWidget {
                 children: [
                   Text(
                     '${goal.targetPercent.round()}%',
-                    style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w800),
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   Text(
                     l10n.t('targetPercent'),
@@ -197,7 +217,10 @@ class _GoalTile extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     '${goal.daysLeft} ${l10n.t('daysLeft')}',
-                    style: const TextStyle(fontSize: 9.5, color: AppColors.muted),
+                    style: const TextStyle(
+                      fontSize: 9.5,
+                      color: AppColors.muted,
+                    ),
                   ),
                 ],
               ),

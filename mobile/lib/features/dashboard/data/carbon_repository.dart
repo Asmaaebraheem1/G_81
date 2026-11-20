@@ -9,6 +9,7 @@ import '../../../core/network/api_client.dart';
 /// Server-calculated values are never recomputed here; this layer only
 /// transports and caches them.
 class CarbonRepository {
+  // ignore: prefer_initializing_formals
   CarbonRepository(this._api, {LocalCache? cache}) : _cache = cache;
 
   final ApiClient _api;
@@ -41,12 +42,7 @@ class CarbonRepository {
     }
     try {
       final data = maps(
-        await _api.getData(
-          '/factors',
-          query: {
-            if (categoryId != null) 'category_id': categoryId,
-          },
-        ),
+        await _api.getData('/factors', query: {'category_id': ?categoryId}),
       );
       await _safePutMany(bucket, {
         for (final item in data) s(item['id']): item,
@@ -69,11 +65,7 @@ class CarbonRepository {
       final data = map(
         await _api.getData(
           '/dashboard/summary',
-          query: {
-            'period': period,
-            if (from != null) 'from': from,
-            if (to != null) 'to': to,
-          },
+          query: {'period': period, 'from': ?from, 'to': ?to},
         ),
       );
       await _safePut('dashboard', key, data);
@@ -97,9 +89,9 @@ class CarbonRepository {
       query: {
         'page': page,
         'per_page': perPage,
-        if (categoryId != null) 'category_id': categoryId,
-        if (from != null) 'from': from,
-        if (to != null) 'to': to,
+        'category_id': ?categoryId,
+        'from': ?from,
+        'to': ?to,
         'sort': '-activity_date',
       },
     );
@@ -129,10 +121,9 @@ class CarbonRepository {
   Future<ActivityRecord> updateRecord(
     int id,
     Map<String, dynamic> body,
-  ) async =>
-      ActivityRecord.fromJson(
-        map(await _api.patchData('/records/$id', body: body)),
-      );
+  ) async => ActivityRecord.fromJson(
+    map(await _api.patchData('/records/$id', body: body)),
+  );
 
   Future<void> deleteRecord(int id) async {
     await _api.deleteData('/records/$id');
@@ -142,15 +133,12 @@ class CarbonRepository {
     String period = 'month',
     String? from,
     String? to,
-  }) async =>
-      map(await _api.getData(
-        '/reports/summary',
-        query: {
-          'period': period,
-          if (from != null) 'from': from,
-          if (to != null) 'to': to,
-        },
-      ));
+  }) async => map(
+    await _api.getData(
+      '/reports/summary',
+      query: {'period': period, 'from': ?from, 'to': ?to},
+    ),
+  );
 
   Future<List<Map<String, dynamic>>> trend({int months = 6}) async {
     final data = map(
@@ -159,11 +147,10 @@ class CarbonRepository {
     return maps(data['points']);
   }
 
-  Future<Map<String, dynamic>> categoryReport({String period = 'month'}) async =>
-      map(await _api.getData(
-        '/reports/categories',
-        query: {'period': period},
-      ));
+  Future<Map<String, dynamic>> categoryReport({
+    String period = 'month',
+  }) async =>
+      map(await _api.getData('/reports/categories', query: {'period': period}));
 
   Future<List<Map<String, dynamic>>> topActivities({
     String period = 'month',
@@ -179,23 +166,15 @@ class CarbonRepository {
   }
 
   Future<Map<String, dynamic>> comparison({String period = 'month'}) async =>
-      map(await _api.getData(
-        '/reports/comparison',
-        query: {'period': period},
-      ));
+      map(await _api.getData('/reports/comparison', query: {'period': period}));
 
-  Future<Uint8List> exportCsv({
-    required String from,
-    required String to,
-  }) =>
+  Future<Uint8List> exportCsv({required String from, required String to}) =>
       _api.download('/reports/export.csv', query: {'from': from, 'to': to});
 
-  Future<List<Goal>> goals({String? status}) async => maps(
-        await _api.getData(
-          '/goals',
-          query: {if (status != null) 'status': status},
-        ),
-      ).map(Goal.fromJson).toList();
+  Future<List<Goal>> goals({String? status}) async =>
+      maps(await _api.getData('/goals', query: {'status': ?status}))
+          .map(Goal.fromJson)
+          .toList();
 
   Future<Goal> goal(int id) async =>
       Goal.fromJson(map(await _api.getData('/goals/$id')));
@@ -207,9 +186,8 @@ class CarbonRepository {
     await _api.deleteData('/goals/$id');
   }
 
-  Future<List<ReductionPlan>> plans() async => maps(
-        await _api.getData('/plans'),
-      ).map(ReductionPlan.fromJson).toList();
+  Future<List<ReductionPlan>> plans() async =>
+      maps(await _api.getData('/plans')).map(ReductionPlan.fromJson).toList();
 
   Future<ReductionPlan> plan(int id) async =>
       ReductionPlan.fromJson(map(await _api.getData('/plans/$id')));
@@ -218,43 +196,35 @@ class CarbonRepository {
     String period = 'month',
     String locale = 'en',
     int? goalId,
-  }) async =>
-      ReductionPlan.fromJson(
-        map(
-          await _api.postData(
-            '/plans/generate',
-            body: {
-              'period': period,
-              'locale': locale,
-              if (goalId != null) 'goal_id': goalId,
-            },
-          ),
-        ),
-      );
+  }) async => ReductionPlan.fromJson(
+    map(
+      await _api.postData(
+        '/plans/generate',
+        body: {'period': period, 'locale': locale, 'goal_id': ?goalId},
+      ),
+    ),
+  );
 
   Future<PlanAction> updatePlanAction(
     int planId,
     int actionId,
     String status,
-  ) async =>
-      PlanAction.fromJson(
-        map(
-          await _api.patchData(
-            '/plans/$planId/actions/$actionId',
-            body: {'status': status},
-          ),
-        ),
-      );
+  ) async => PlanAction.fromJson(
+    map(
+      await _api.patchData(
+        '/plans/$planId/actions/$actionId',
+        body: {'status': status},
+      ),
+    ),
+  );
 
   Future<Map<String, dynamic>> planProgress(int id) async =>
       map(await _api.getData('/plans/$id/progress'));
 
-  Future<List<Challenge>> challenges({String? status}) async => maps(
-        await _api.getData(
-          '/challenges',
-          query: {if (status != null) 'status': status},
-        ),
-      ).map(Challenge.fromJson).toList();
+  Future<List<Challenge>> challenges({String? status}) async =>
+      maps(await _api.getData('/challenges', query: {'status': ?status}))
+          .map(Challenge.fromJson)
+          .toList();
 
   Future<Challenge> challenge(int id) async =>
       Challenge.fromJson(map(await _api.getData('/challenges/$id')));
@@ -272,28 +242,23 @@ class CarbonRepository {
   Future<Map<String, dynamic>> reportChallengeProgress(
     int id, {
     double? value,
-  }) async =>
-      map(
-        await _api.postData(
-          '/challenges/$id/progress',
-          body: {if (value != null) 'value': value},
-        ),
-      );
+  }) async => map(
+    await _api.postData('/challenges/$id/progress', body: {'value': ?value}),
+  );
 
   Future<Map<String, dynamic>> achievements() async =>
       map(await _api.getData('/achievements'));
 
   Future<Map<String, dynamic>> leaderboard({String period = 'month'}) async =>
-      map(await _api.getData(
-        '/leaderboard',
-        query: {'period': period},
-      ));
+      map(await _api.getData('/leaderboard', query: {'period': period}));
 
   Future<Map<String, dynamic>> notifications({bool unreadOnly = false}) async =>
-      map(await _api.getData(
-        '/notifications',
-        query: {if (unreadOnly) 'unread': 1},
-      ));
+      map(
+        await _api.getData(
+          '/notifications',
+          query: {if (unreadOnly) 'unread': 1},
+        ),
+      );
 
   Future<void> markNotificationRead(int id) async {
     await _api.patchData('/notifications/$id/read');
@@ -308,31 +273,25 @@ class CarbonRepository {
 
   Future<Map<String, dynamic>> updateNotificationPreferences(
     Map<String, dynamic> body,
-  ) async =>
-      map(await _api.patchData('/notification-preferences', body: body));
+  ) async => map(await _api.patchData('/notification-preferences', body: body));
 
   Future<Map<String, dynamic>> recommendedAlternatives({
     String locale = 'en',
-  }) async =>
-      map(await _api.getData(
-        '/alternatives/recommended',
-        query: {'locale': locale},
-      ));
+  }) async => map(
+    await _api.getData('/alternatives/recommended', query: {'locale': locale}),
+  );
 
-  Future<List<Map<String, dynamic>>> savedAlternatives() async => maps(
-        await _api.getData('/alternatives/saved'),
-      );
+  Future<List<Map<String, dynamic>>> savedAlternatives() async =>
+      maps(await _api.getData('/alternatives/saved'));
 
   Future<void> saveAlternative(int id, String status) async {
-    await _api.postData(
-      '/alternatives/$id/save',
-      body: {'status': status},
-    );
+    await _api.postData('/alternatives/$id/save', body: {'status': status});
   }
 
-  Future<List<Article>> articles() async => maps(
-        await _api.getData('/content/articles'),
-      ).map(Article.fromJson).toList();
+  Future<List<Article>> articles() async =>
+      maps(await _api.getData('/content/articles'))
+          .map(Article.fromJson)
+          .toList();
 
   Future<Article> article(String slug) async =>
       Article.fromJson(map(await _api.getData('/content/articles/$slug')));
@@ -343,44 +302,40 @@ class CarbonRepository {
   Future<Map<String, dynamic>> aiInsights({
     String period = 'month',
     String locale = 'en',
-  }) async =>
-      map(
-        await _api.postData(
-          '/ai/insights',
-          body: {'period': period, 'locale': locale},
-        ),
-      );
+  }) async => map(
+    await _api.postData(
+      '/ai/insights',
+      body: {'period': period, 'locale': locale},
+    ),
+  );
 
   Future<Map<String, dynamic>> aiSummary({
     String period = 'month',
     String locale = 'en',
-  }) async =>
-      map(
-        await _api.postData(
-          '/ai/summary',
-          body: {'period': period, 'locale': locale},
-        ),
-      );
+  }) async => map(
+    await _api.postData(
+      '/ai/summary',
+      body: {'period': period, 'locale': locale},
+    ),
+  );
 
   Future<Map<String, dynamic>> aiChat({
     required String message,
     int? conversationId,
     String locale = 'en',
-  }) async =>
-      map(
-        await _api.postData(
-          '/ai/chat',
-          body: {
-            'message': message,
-            'locale': locale,
-            if (conversationId != null) 'conversation_id': conversationId,
-          },
-        ),
-      );
+  }) async => map(
+    await _api.postData(
+      '/ai/chat',
+      body: {
+        'message': message,
+        'locale': locale,
+        'conversation_id': ?conversationId,
+      },
+    ),
+  );
 
-  Future<List<Map<String, dynamic>>> aiConversations() async => maps(
-        await _api.getData('/ai/conversations'),
-      );
+  Future<List<Map<String, dynamic>>> aiConversations() async =>
+      maps(await _api.getData('/ai/conversations'));
 
   Future<Map<String, dynamic>> aiConversation(int id) async =>
       map(await _api.getData('/ai/conversations/$id'));
@@ -389,23 +344,21 @@ class CarbonRepository {
     await _api.deleteData('/ai/conversations/$id');
   }
 
-  Future<List<Map<String, dynamic>>> documents() async => maps(
-        await _api.getData('/documents'),
-      );
+  Future<List<Map<String, dynamic>>> documents() async =>
+      maps(await _api.getData('/documents'));
 
   Future<Map<String, dynamic>> uploadDocument({
     required Uint8List bytes,
     required String filename,
     required bool consent,
-  }) async =>
-      map(
-        await _api.upload(
-          '/documents',
-          bytes: bytes,
-          filename: filename,
-          fields: {'consent': consent ? 'true' : 'false'},
-        ),
-      );
+  }) async => map(
+    await _api.upload(
+      '/documents',
+      bytes: bytes,
+      filename: filename,
+      fields: {'consent': consent ? 'true' : 'false'},
+    ),
+  );
 
   Future<Map<String, dynamic>> extractDocument(int id) async =>
       map(await _api.postData('/documents/$id/extract'));
@@ -418,20 +371,19 @@ class CarbonRepository {
     required String unit,
     required String activityDate,
     String? vendor,
-  }) async =>
-      map(
-        await _api.postData(
-          '/documents/$id/confirm',
-          body: {
-            'category_id': categoryId,
-            'factor_id': factorId,
-            'quantity': quantity,
-            'unit': unit,
-            'activity_date': activityDate,
-            if (vendor != null && vendor.isNotEmpty) 'vendor': vendor,
-          },
-        ),
-      );
+  }) async => map(
+    await _api.postData(
+      '/documents/$id/confirm',
+      body: {
+        'category_id': categoryId,
+        'factor_id': factorId,
+        'quantity': quantity,
+        'unit': unit,
+        'activity_date': activityDate,
+        'vendor': ?(vendor == null || vendor.isEmpty ? null : vendor),
+      },
+    ),
+  );
 
   Future<void> deleteDocument(int id) async {
     await _api.deleteData('/documents/$id');
@@ -455,17 +407,13 @@ class CarbonRepository {
   }) async {
     await _api.patchData(
       '/auth/password',
-      body: {
-        'current_password': currentPassword,
-        'new_password': newPassword,
-      },
+      body: {'current_password': currentPassword, 'new_password': newPassword},
     );
   }
 
   Future<Map<String, dynamic>> updateOrganization(
     Map<String, dynamic> body,
-  ) async =>
-      map(await _api.patchData('/organization', body: body));
+  ) async => map(await _api.patchData('/organization', body: body));
 
   Future<dynamic> _safeRead(String bucket, String key) async {
     try {
@@ -493,10 +441,7 @@ class CarbonRepository {
     }
   }
 
-  Future<void> _safePutMany(
-    String bucket,
-    Map<String, Object?> values,
-  ) async {
+  Future<void> _safePutMany(String bucket, Map<String, Object?> values) async {
     try {
       await _cache?.putMany(bucket, values);
     } catch (_) {

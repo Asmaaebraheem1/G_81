@@ -58,7 +58,7 @@ class _ChallengeDetailPageState extends State<ChallengeDetailPage> {
       final controller = TextEditingController();
       value = await showDialog<double>(
         context: context,
-        builder: (context) => AlertDialog(
+        builder: (dialogContext) => AlertDialog(
           title: Text(context.tr('selfReport')),
           content: TextField(
             controller: controller,
@@ -68,12 +68,14 @@ class _ChallengeDetailPageState extends State<ChallengeDetailPage> {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext),
               child: Text(context.tr('cancel')),
             ),
             FilledButton(
-              onPressed: () =>
-                  Navigator.pop(context, double.tryParse(controller.text.trim())),
+              onPressed: () => Navigator.pop(
+                dialogContext,
+                double.tryParse(controller.text.trim()),
+              ),
               child: Text(context.tr('save')),
             ),
           ],
@@ -81,12 +83,13 @@ class _ChallengeDetailPageState extends State<ChallengeDetailPage> {
       );
       if (value == null) return;
     }
+    if (!mounted) return;
     setState(() => _busy = true);
     try {
       await context.read<CarbonRepository>().reportChallengeProgress(
-            widget.challengeId,
-            value: value,
-          );
+        widget.challengeId,
+        value: value,
+      );
       if (!mounted) return;
       _cubit.run(_load, silent: true);
     } catch (error) {
@@ -145,7 +148,11 @@ class _ChallengeDetailPageState extends State<ChallengeDetailPage> {
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.emoji_events_rounded, color: AppColors.sandSoft, size: 22),
+                          const Icon(
+                            Icons.emoji_events_rounded,
+                            color: AppColors.sandSoft,
+                            size: 22,
+                          ),
                           const Spacer(),
                           Pill(
                             label: '${challenge.points} ${l10n.t('points')}',
@@ -219,15 +226,23 @@ class _ChallengeDetailPageState extends State<ChallengeDetailPage> {
                       ),
                       DetailRow(
                         label: l10n.t('startDate'),
-                        value: formatDate(challenge.startDate, locale: l10n.locale.languageCode),
+                        value: formatDate(
+                          challenge.startDate,
+                          locale: l10n.locale.languageCode,
+                        ),
                       ),
                       DetailRow(
                         label: l10n.t('endDate'),
-                        value: formatDate(challenge.endDate, locale: l10n.locale.languageCode),
+                        value: formatDate(
+                          challenge.endDate,
+                          locale: l10n.locale.languageCode,
+                        ),
                       ),
                       DetailRow(
                         label: l10n.t('source'),
-                        value: verified ? l10n.t('verified') : l10n.t('selfReported'),
+                        value: verified
+                            ? l10n.t('verified')
+                            : l10n.t('selfReported'),
                       ),
                     ],
                   ),
@@ -240,7 +255,10 @@ class _ChallengeDetailPageState extends State<ChallengeDetailPage> {
                         ? const SizedBox(
                             width: 20,
                             height: 20,
-                            child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              color: Colors.white,
+                            ),
                           )
                         : Text(l10n.t('join')),
                   )
@@ -253,7 +271,10 @@ class _ChallengeDetailPageState extends State<ChallengeDetailPage> {
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.verified_rounded, color: AppColors.forest),
+                        const Icon(
+                          Icons.verified_rounded,
+                          color: AppColors.forest,
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
@@ -283,14 +304,22 @@ class _ChallengeDetailPageState extends State<ChallengeDetailPage> {
                   ),
                   child: Row(
                     children: [
-                      const Icon(Icons.shield_outlined, size: 17, color: AppColors.muted),
+                      const Icon(
+                        Icons.shield_outlined,
+                        size: 17,
+                        color: AppColors.muted,
+                      ),
                       const SizedBox(width: 9),
                       Expanded(
                         child: Text(
                           l10n.isArabic
                               ? 'يُحسب التقدم من سجلاتك في الخادم متى أمكن، وإلا يُسجّل ذاتيًا.'
                               : 'Progress is calculated from your backend records where possible, otherwise self-reported.',
-                          style: const TextStyle(fontSize: 9.5, height: 1.4, color: AppColors.muted),
+                          style: const TextStyle(
+                            fontSize: 9.5,
+                            height: 1.4,
+                            color: AppColors.muted,
+                          ),
                         ),
                       ),
                     ],

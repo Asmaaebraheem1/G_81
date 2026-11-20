@@ -30,7 +30,8 @@ class _DocumentsPageState extends State<DocumentsPage> {
   @override
   void initState() {
     super.initState();
-    _cubit = AsyncCubit<List<Map<String, dynamic>>>(const AsyncState())..run(_load);
+    _cubit = AsyncCubit<List<Map<String, dynamic>>>(const AsyncState())
+      ..run(_load);
   }
 
   @override
@@ -41,23 +42,27 @@ class _DocumentsPageState extends State<DocumentsPage> {
 
   Future<void> _pickAndUpload() async {
     final picker = ImagePicker();
-    final file = await picker.pickImage(source: ImageSource.gallery, imageQuality: 88);
+    final file = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 88,
+    );
     if (file == null || !mounted) return;
     final consent = await _askConsent();
     if (consent == null || !mounted) return;
     setState(() => _uploading = true);
     try {
       final bytes = await file.readAsBytes();
+      if (!mounted) return;
       await context.read<CarbonRepository>().uploadDocument(
-            bytes: bytes,
-            filename: p.basename(file.name.isEmpty ? 'bill.jpg' : file.name),
-            consent: consent,
-          );
+        bytes: bytes,
+        filename: p.basename(file.name.isEmpty ? 'bill.jpg' : file.name),
+        consent: consent,
+      );
       if (!mounted) return;
       showSnack(context, context.tr('saved'));
       _cubit.run(_load, silent: true);
     } catch (error) {
-      if (!mounted) return;
+      if (!context.mounted) return;
       showSnack(context, _friendly(error), error: true);
     } finally {
       if (mounted) setState(() => _uploading = false);
@@ -82,7 +87,8 @@ class _DocumentsPageState extends State<DocumentsPage> {
                   context.tr('consent'),
                   style: const TextStyle(fontSize: 11.5, height: 1.4),
                 ),
-                onChanged: (next) => setDialogState(() => value = next ?? false),
+                onChanged: (next) =>
+                    setDialogState(() => value = next ?? false),
               ),
             ],
           ),
@@ -116,7 +122,10 @@ class _DocumentsPageState extends State<DocumentsPage> {
             children: [
               Text(
                 s(document['original_filename']),
-                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w800),
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               const SizedBox(height: 4),
               Text(
@@ -203,7 +212,9 @@ class _DocumentsPageState extends State<DocumentsPage> {
       isScrollControlled: true,
       showDragHandle: true,
       builder: (context) => Padding(
-        padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.viewInsetsOf(context).bottom,
+        ),
         child: _DocumentConfirmSheet(
           documentId: id,
           fields: fields,
@@ -224,7 +235,8 @@ class _DocumentsPageState extends State<DocumentsPage> {
     }
   }
 
-  String _friendly(Object error) => error is ApiException ? error.message : error.toString();
+  String _friendly(Object error) =>
+      error is ApiException ? error.message : error.toString();
 
   @override
   Widget build(BuildContext context) {
@@ -308,12 +320,18 @@ class _DocumentsPageState extends State<DocumentsPage> {
                               s(doc['original_filename']),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             const SizedBox(height: 3),
                             Text(
                               '${formatBytes(ni(doc['size_bytes']))} · ${formatDate(DateTime.tryParse(s(doc['created_at'])), locale: l10n.locale.languageCode)}',
-                              style: const TextStyle(fontSize: 9.5, color: AppColors.muted),
+                              style: const TextStyle(
+                                fontSize: 9.5,
+                                color: AppColors.muted,
+                              ),
                             ),
                           ],
                         ),
@@ -402,7 +420,9 @@ class _DocumentConfirmSheetState extends State<_DocumentConfirmSheet> {
   }
 
   Future<void> _loadFactors(int categoryId) async {
-    final factors = await context.read<CarbonRepository>().factors(categoryId: categoryId);
+    final factors = await context.read<CarbonRepository>().factors(
+      categoryId: categoryId,
+    );
     if (!mounted) return;
     setState(() {
       _factors = factors;
@@ -424,14 +444,14 @@ class _DocumentConfirmSheetState extends State<_DocumentConfirmSheet> {
     setState(() => _saving = true);
     try {
       await context.read<CarbonRepository>().confirmDocument(
-            widget.documentId,
-            categoryId: _categoryId!,
-            factorId: factor.id,
-            quantity: double.parse(_quantity.text.trim()),
-            unit: factor.unit,
-            activityDate: DateFormat('yyyy-MM-dd').format(_selectedDate),
-            vendor: _vendor.text.trim(),
-          );
+        widget.documentId,
+        categoryId: _categoryId!,
+        factorId: factor.id,
+        quantity: double.parse(_quantity.text.trim()),
+        unit: factor.unit,
+        activityDate: DateFormat('yyyy-MM-dd').format(_selectedDate),
+        vendor: _vendor.text.trim(),
+      );
       if (!mounted) return;
       widget.onSaved();
       Navigator.pop(context);
@@ -468,14 +488,20 @@ class _DocumentConfirmSheetState extends State<_DocumentConfirmSheet> {
                 children: [
                   Text(
                     l10n.t('confirmValues'),
-                    style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     widget.fields == null
                         ? l10n.t('manualEntry')
                         : 'AI · ${l10n.t('bestEffort')}',
-                    style: const TextStyle(fontSize: 10, color: AppColors.muted),
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: AppColors.muted,
+                    ),
                   ),
                   const SizedBox(height: 16),
                   Text(l10n.t('category'), style: _labelStyle),
@@ -531,10 +557,16 @@ class _DocumentConfirmSheetState extends State<_DocumentConfirmSheet> {
                             TextFormField(
                               controller: _quantity,
                               keyboardType:
-                                  const TextInputType.numberWithOptions(decimal: true),
-                              decoration: InputDecoration(suffixText: _factor?.unit ?? ''),
+                                  const TextInputType.numberWithOptions(
+                                    decimal: true,
+                                  ),
+                              decoration: InputDecoration(
+                                suffixText: _factor?.unit ?? '',
+                              ),
                               validator: (value) {
-                                final parsed = double.tryParse((value ?? '').trim());
+                                final parsed = double.tryParse(
+                                  (value ?? '').trim(),
+                                );
                                 return parsed == null || parsed <= 0
                                     ? l10n.t('validationError')
                                     : null;
@@ -563,7 +595,8 @@ class _DocumentConfirmSheetState extends State<_DocumentConfirmSheet> {
                                 if (picked == null) return;
                                 setState(() {
                                   _selectedDate = picked;
-                                  _date.text = DateFormat('yyyy-MM-dd').format(picked);
+                                  _date.text = DateFormat('yyyy-MM-dd')
+                                      .format(picked);
                                 });
                               },
                             ),
@@ -597,8 +630,8 @@ class _DocumentConfirmSheetState extends State<_DocumentConfirmSheet> {
   }
 
   TextStyle get _labelStyle => const TextStyle(
-        fontSize: 11,
-        fontWeight: FontWeight.w700,
-        color: AppColors.ink,
-      );
+    fontSize: 11,
+    fontWeight: FontWeight.w700,
+    color: AppColors.ink,
+  );
 }
