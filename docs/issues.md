@@ -4,8 +4,8 @@ Index of GitHub issues. Update in the PR that closes each issue.
 
 | # | Title | Area | Milestone | Status |
 |---|---|---|---|---|
-| 1 | Epic — CarbonWise | all | — | 🟡 delivered in #2 |
-| 2 | Delivery PR — CarbonWise v1 | all | — | 🟡 open |
+| 1 | Epic — CarbonWise | all | — | ✅ closed |
+| 2 | Delivery PR — CarbonWise v1 | all | — | ✅ merged |
 | 3 | Backend scaffold | backend | M0 | ✅ |
 | 4 | Mobile scaffold | mobile | M0 | ✅ |
 | 5 | Schema, migrations, deterministic seed | backend | M1 | ✅ |
@@ -25,6 +25,7 @@ Index of GitHub issues. Update in the PR that closes each issue.
 | 19 | AI assistant, insights, summaries, flags | backend + mobile | M9 | ✅ |
 | 20 | Hardening, coverage, EN/AR audit, demo | all | M10 | ✅ |
 | 21 | Diagrams, screenshots, visual assets, AI docs | docs | M10 | ✅ |
+| 22 | Post-merge closeout: status, issue index, CI evidence | docs | — | ✅ |
 
 Status: ⬜ not started · 🟡 in progress · ✅ merged/closed.
 
