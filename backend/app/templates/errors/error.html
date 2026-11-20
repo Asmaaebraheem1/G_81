@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ code }} · CarbonWise</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body>
+  <main style="max-width: 620px; margin: 12vh auto; padding: 0 24px;">
+    <p class="eyebrow">CarbonWise</p>
+    <h1 style="font-size: 56px; margin: 8px 0;">{{ code }}</h1>
+    <p class="muted" style="font-size: 16px; margin-bottom: 24px;">{{ message }}</p>
+    <a class="btn btn-primary" href="{{ url_for('admin.dashboard') }}">Back to dashboard</a>
+  </main>
+</body>
+</html>

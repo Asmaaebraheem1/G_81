@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import field %}
+{% block title %}{{ 'New challenge' if mode == 'new' else 'Edit challenge' }} · CarbonWise Admin{% endblock %}
+{% block page_title %}{{ 'New challenge' if mode == 'new' else 'Edit challenge' }}{% endblock %}
+{% block content %}
+<section class="card" style="max-width:980px">
+  <div class="card-head"><div><p class="eyebrow">Program</p><h2>Challenge rules</h2><p class="muted">Arabic and English copy are required. Progress verification is performed by the backend.</p></div><a class="link" href="{{ url_for('admin.challenges') }}">Back to challenges</a></div>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div class="form-grid">
+      <div>{{ field(form.key) }}</div>
+      <div>{{ field(form.type) }}</div>
+      <div>{{ field(form.title_en) }}</div>
+      <div>{{ field(form.title_ar) }}</div>
+      <div class="span-2">{{ field(form.description_en) }}</div>
+      <div class="span-2">{{ field(form.description_ar) }}</div>
+      <div>{{ field(form.category_id) }}</div>
+      <div>{{ field(form.badge_id) }}</div>
+      <div>{{ field(form.target_type) }}</div>
+      <div>{{ field(form.target_value) }}</div>
+      <div>{{ field(form.points) }}</div>
+      <div>{{ field(form.start_date) }}</div>
+      <div>{{ field(form.end_date) }}</div>
+      <div><label class="check" style="margin-top:24px">{{ form.is_active() }} Active</label></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">{{ form.submit.label.text }}</button>
+      <a class="btn btn-ghost" href="{{ url_for('admin.challenges') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

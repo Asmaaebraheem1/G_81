@@ -1,0 +1,45 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import pager, status_badge %}
+{% block title %}Records · CarbonWise Admin{% endblock %}
+{% block page_title %}Consumption records{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="card-head">
+    <div><p class="eyebrow">Transparent calculations</p><h2>All activity records</h2><p class="muted">Filter by status, category, or note. Every row keeps its factor snapshot.</p></div>
+  </div>
+  <form class="toolbar" method="get" style="margin-bottom:14px">
+    <input class="input" type="search" name="q" value="{{ q }}" placeholder="Note or category">
+    <select name="status">
+      <option value="">All statuses</option>
+      {% for option in ['active','flagged','deleted'] %}<option value="{{ option }}" {{ 'selected' if status == option }}>{{ option|title }}</option>{% endfor %}
+    </select>
+    <select name="category_id">
+      <option value="">All categories</option>
+      {% for category in categories %}<option value="{{ category.id }}" {{ 'selected' if category_id == category.id }}>{{ category.name_en }}</option>{% endfor %}
+    </select>
+    <button class="btn btn-primary btn-sm" type="submit">Filter</button>
+  </form>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Date</th><th>User</th><th>Category</th><th>Quantity</th><th class="numeric">kg CO2e</th><th>Source</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+      {% for row in pagination.items %}
+        <tr>
+          <td>{{ row.activity_date|fmt_date }}</td>
+          <td><small>{{ row.user.email if row.user else '—' }}</small></td>
+          <td>{{ row.category.name_en if row.category else '—' }}</td>
+          <td>{{ '%.2f'|format(row.quantity) }} {{ row.unit }}</td>
+          <td class="numeric mono">{{ row.emissions_kg }}</td>
+          <td><span class="badge">{{ row.source }}</span></td>
+          <td>{{ status_badge(row.status) }}</td>
+          <td><a class="btn btn-ghost btn-sm" href="{{ url_for('admin.record_detail', record_id=row.id) }}">Formula</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="8" class="empty">No records match this filter.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {{ pager(pagination, 'admin.records') }}
+</section>
+{% endblock %}

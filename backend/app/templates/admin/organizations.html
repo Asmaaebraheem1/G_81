@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import pager, status_badge %}
+{% block title %}Organizations · CarbonWise Admin{% endblock %}
+{% block page_title %}Organizations{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="card-head">
+    <div><p class="eyebrow">Business accounts</p><h2>Organizations</h2></div>
+    <form class="toolbar" method="get">
+      <input class="input" type="search" name="q" value="{{ q }}" placeholder="Organization name">
+      <button class="btn btn-primary btn-sm" type="submit">Search</button>
+    </form>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Organization</th><th>Type</th><th>Location</th><th>Verified</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+      {% for org in pagination.items %}
+        <tr>
+          <td><strong>{{ org.name_en }}</strong><br><small>{{ org.slug }}</small></td>
+          <td><span class="badge">{{ org.org_type }}</span></td>
+          <td>{{ org.city or '—' }}{% if org.country %}, {{ org.country }}{% endif %}</td>
+          <td>{{ status_badge('verified' if org.is_verified else 'pending') }}</td>
+          <td>{{ status_badge('active' if org.is_active else 'suspended') }}</td>
+          <td><a class="btn btn-ghost btn-sm" href="{{ url_for('admin.organization_detail', org_id=org.id) }}">Open</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">No organizations yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {{ pager(pagination, 'admin.organizations') }}
+</section>
+{% endblock %}

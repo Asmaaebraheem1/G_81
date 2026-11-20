@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import field %}
+{% block title %}Send notification · CarbonWise Admin{% endblock %}
+{% block page_title %}Send notification{% endblock %}
+{% block content %}
+<section class="card" style="max-width:900px">
+  <div class="card-head"><div><p class="eyebrow">In-app message</p><h2>Compose</h2><p class="muted">Use a specific email for one user, or target every active user.</p></div><a class="link" href="{{ url_for('admin.notifications') }}">Back to notifications</a></div>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div class="form-grid">
+      <div>{{ field(form.target) }}</div>
+      <div>{{ field(form.email) }}</div>
+      <div>{{ field(form.type) }}</div>
+      <div>{{ field(form.action_url) }}</div>
+      <div>{{ field(form.title_en) }}</div>
+      <div>{{ field(form.title_ar) }}</div>
+      <div class="span-2">{{ field(form.body_en) }}</div>
+      <div class="span-2">{{ field(form.body_ar) }}</div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">{{ form.submit.label.text }}</button>
+      <a class="btn btn-ghost" href="{{ url_for('admin.notifications') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

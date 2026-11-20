@@ -1,0 +1,55 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import status_badge %}
+{% block title %}{{ plan.title }} · CarbonWise Admin{% endblock %}
+{% block page_title %}Plan detail{% endblock %}
+{% block content %}
+<div class="detail-grid">
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Reduction plan</p><h2>{{ plan.title }}</h2></div>{{ status_badge(plan.status) }}</div>
+    <p style="margin-bottom:14px">{{ plan.summary }}</p>
+    <div class="meta-list">
+      <div class="meta-row"><span>User</span><strong>{{ plan.user.email if plan.user else '—' }}</strong></div>
+      <div class="meta-row"><span>Goal</span><strong>{% if plan.goal %}#{{ plan.goal.id }} · {{ plan.goal.title }}{% else %}—{% endif %}</strong></div>
+      <div class="meta-row"><span>Source / model</span><strong>{{ plan.source }} · {{ plan.model or 'template' }}</strong></div>
+      <div class="meta-row"><span>Locale</span><strong>{{ plan.locale }}</strong></div>
+      <div class="meta-row"><span>Generated</span><strong>{{ plan.generated_at|fmt_dt }}</strong></div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Admin action</p><h2>Status</h2></div></div>
+    <form method="post" action="{{ url_for('admin.plan_status', plan_id=plan.id) }}" class="stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label class="field"><span>Plan status</span>
+        <select name="status" class="input">
+          {% for option in ['draft','active','completed','archived'] %}<option value="{{ option }}" {{ 'selected' if plan.status == option }}>{{ option|title }}</option>{% endfor %}
+        </select>
+      </label>
+      <button class="btn btn-primary" type="submit">Update plan</button>
+    </form>
+    <div class="callout" style="margin-top:14px"><strong>Estimated savings</strong> are computed from the category total and a documented backend assumption. AI text never sets the grams.</div>
+  </section>
+</div>
+<section class="card" style="margin-top:16px">
+  <div class="card-head"><div><p class="eyebrow">Steps</p><h2>Plan actions</h2></div><span class="badge">{{ plan.actions|length }} actions</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Action</th><th>Category</th><th>Priority</th><th>Timeframe</th><th class="numeric">Est. saving</th><th>Status</th></tr></thead>
+      <tbody>
+      {% for action in plan.actions %}
+        <tr>
+          <td><strong>{{ action.title }}</strong><br><small>{{ action.description or '' }}</small></td>
+          <td>{{ action.category.name_en if action.category else '—' }}</td>
+          <td><span class="badge badge-{{ action.priority }}">{{ action.priority }}</span></td>
+          <td>{{ action.timeframe|replace('_',' ') }}</td>
+          <td class="numeric mono">{{ action.estimated_saving_grams|kg if action.estimated_saving_grams else '—' }}{% if action.estimated_saving_grams %} kg{% endif %}</td>
+          <td>{{ status_badge(action.status) }}</td>
+        </tr>
+        {% if action.saving_assumption %}<tr><td colspan="6"><small class="muted">{{ action.saving_assumption }}</small></td></tr>{% endif %}
+      {% else %}
+        <tr><td colspan="6" class="empty">No actions in this plan.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

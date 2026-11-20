@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import status_badge %}
+{% block title %}{{ user.full_name }} · CarbonWise Admin{% endblock %}
+{% block page_title %}User detail{% endblock %}
+{% block content %}
+<div class="detail-grid">
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Account</p><h2>{{ user.full_name }}</h2><p class="muted">{{ user.email }}</p></div>{{ status_badge('active' if user.is_active else 'suspended') }}</div>
+    <div class="meta-list">
+      <div class="meta-row"><span>Account type</span><strong>{{ user.account_type }}</strong></div>
+      <div class="meta-row"><span>Organization</span><strong>{{ user.organization.name_en if user.organization else '—' }}</strong></div>
+      <div class="meta-row"><span>Owner</span><strong>{{ 'Yes' if user.is_org_owner else 'No' }}</strong></div>
+      <div class="meta-row"><span>Locale / timezone</span><strong>{{ user.locale }} · {{ user.timezone }}</strong></div>
+      <div class="meta-row"><span>Created</span><strong>{{ user.created_at|fmt_dt }}</strong></div>
+      <div class="meta-row"><span>Last login</span><strong>{{ user.last_login_at|fmt_dt }}</strong></div>
+    </div>
+    <div class="actions" style="margin-top:16px">
+      <form method="post" action="{{ url_for('admin.user_action', user_id=user.id) }}" class="inline-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-ghost btn-sm" name="action" value="{{ 'suspend' if user.is_active else 'activate' }}" type="submit">{{ 'Suspend' if user.is_active else 'Activate' }}</button>
+      </form>
+      <form method="post" action="{{ url_for('admin.user_action', user_id=user.id) }}" class="inline-form" onsubmit="return confirm('Reset this user password?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-danger btn-sm" name="action" value="reset-password" type="submit">Reset password</button>
+      </form>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Footprint</p><h2>Activity</h2></div></div>
+    <div class="meta-list">
+      <div class="meta-row"><span>Active records</span><strong>{{ record_count }}</strong></div>
+      <div class="meta-row"><span>Goals</span><strong>{{ goal_count }}</strong></div>
+      <div class="meta-row"><span>Plans</span><strong>{{ plan_count }}</strong></div>
+      <div class="meta-row"><span>Documents</span><strong>{{ document_count }}</strong></div>
+      <div class="meta-row"><span>Leaderboard</span><strong>{{ 'Opted in' if user.profile and user.profile.leaderboard_opt_in else 'Private' }}</strong></div>
+    </div>
+  </section>
+</div>
+<section class="card" style="margin-top:16px">
+  <div class="card-head"><div><p class="eyebrow">Latest</p><h2>Recent records</h2></div><a class="link" href="{{ url_for('admin.records') }}?q={{ user.email }}">All records</a></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Date</th><th>Category</th><th>Quantity</th><th class="numeric">kg CO2e</th><th></th></tr></thead>
+      <tbody>
+      {% for record in records %}
+        <tr>
+          <td>{{ record.activity_date|fmt_date }}</td>
+          <td>{{ record.category.name_en if record.category else '—' }}</td>
+          <td>{{ '%.2f'|format(record.quantity) }} {{ record.unit }}</td>
+          <td class="numeric">{{ record.emissions_kg }}</td>
+          <td><a class="link" href="{{ url_for('admin.record_detail', record_id=record.id) }}">Detail</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="empty">No records yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import field %}
+{% block title %}{{ 'New factor' if mode == 'new' else 'Edit factor' }} · CarbonWise Admin{% endblock %}
+{% block page_title %}{{ 'New factor' if mode == 'new' else 'Edit factor' }}{% endblock %}
+{% block content %}
+<section class="card" style="max-width:980px">
+  <div class="card-head"><div><p class="eyebrow">Documented factor</p><h2>Source, unit, and validity</h2><p class="muted">A factor is grams of CO2e per activity unit. Existing records keep their snapshot.</p></div><a class="link" href="{{ url_for('admin.factors') }}">Back to factors</a></div>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div class="form-grid">
+      <div>{{ field(form.category_id) }}</div>
+      <div>{{ field(form.key) }}</div>
+      <div>{{ field(form.name_en) }}</div>
+      <div>{{ field(form.name_ar) }}</div>
+      <div>{{ field(form.activity_type) }}</div>
+      <div>{{ field(form.unit) }}</div>
+      <div>{{ field(form.factor_grams_co2e) }}</div>
+      <div>{{ field(form.region) }}</div>
+      <div>{{ field(form.source_name) }}</div>
+      <div>{{ field(form.source_year) }}</div>
+      <div class="span-2">{{ field(form.source_url) }}</div>
+      <div>{{ field(form.valid_from) }}</div>
+      <div>{{ field(form.valid_to) }}</div>
+      <div class="span-2">{{ field(form.notes) }}</div>
+      <div><label class="check">{{ form.is_active() }} Active for new records</label></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">{{ form.submit.label.text }}</button>
+      <a class="btn btn-ghost" href="{{ url_for('admin.factors') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in · CarbonWise Admin</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+</head>
+<body class="login-body">
+  <main class="login-wrap">
+    <section class="login-card">
+      <div class="login-brand"><span class="brand-mark">C</span><div><strong>CarbonWise</strong><small>Admin console</small></div></div>
+      <h1>Welcome back</h1>
+      <p class="muted">Sign in to manage the catalog, users, programs, content, and AI monitoring.</p>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}<div class="flash flash-{{ category }}">{{ message }}</div>{% endfor %}
+      {% endwith %}
+      <form method="post" class="stack">
+        {{ form.hidden_tag() }}
+        <div class="field">
+          {{ form.email.label }}
+          {{ form.email(class="input", autocomplete="username", placeholder="admin@carbonwise.demo") }}
+          {% if form.email.errors %}<p class="field-error">{{ form.email.errors[0] }}</p>{% endif %}
+        </div>
+        <div class="field">
+          {{ form.password.label }}
+          {{ form.password(class="input", autocomplete="current-password", placeholder="••••••••") }}
+          {% if form.password.errors %}<p class="field-error">{{ form.password.errors[0] }}</p>{% endif %}
+        </div>
+        <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+      </form>
+      <div class="demo-hint">
+        <strong>Demo credentials</strong>
+        <span>admin@carbonwise.demo / Admin123!</span>
+        <span>editor@carbonwise.demo / Editor123!</span>
+      </div>
+    </section>
+    <section class="login-aside">
+      <div class="login-aside-inner">
+        <p class="eyebrow">Local demo</p>
+        <h2>Manage the whole carbon journey.</h2>
+        <p>Documented factors, transparent records, goals, plans, challenges, and AI monitoring — in one bilingual platform.</p>
+        <ul>
+          <li>Emissions stored as integer grams CO2e</li>
+          <li>AI explanations never replace backend calculations</li>
+          <li>Cookie session + CSRF, no JWT in the admin</li>
+        </ul>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

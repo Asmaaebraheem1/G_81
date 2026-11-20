@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import field %}
+{% block title %}{{ 'New badge' if mode == 'new' else 'Edit badge' }} · CarbonWise Admin{% endblock %}
+{% block page_title %}{{ 'New badge' if mode == 'new' else 'Edit badge' }}{% endblock %}
+{% block content %}
+<section class="card" style="max-width:860px">
+  <div class="card-head"><div><p class="eyebrow">Achievement</p><h2>Badge details</h2></div><a class="link" href="{{ url_for('admin.badges') }}">Back to badges</a></div>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div class="form-grid">
+      <div>{{ field(form.key) }}</div>
+      <div>{{ field(form.icon) }}</div>
+      <div>{{ field(form.title_en) }}</div>
+      <div>{{ field(form.title_ar) }}</div>
+      <div class="span-2">{{ field(form.description_en) }}</div>
+      <div class="span-2">{{ field(form.description_ar) }}</div>
+      <div class="span-2">{{ field(form.criteria) }}</div>
+      <div>{{ field(form.points) }}</div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">{{ form.submit.label.text }}</button>
+      <a class="btn btn-ghost" href="{{ url_for('admin.badges') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

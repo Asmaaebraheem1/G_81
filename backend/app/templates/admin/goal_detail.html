@@ -1,0 +1,35 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import status_badge %}
+{% block title %}{{ goal.title }} · CarbonWise Admin{% endblock %}
+{% block page_title %}Goal detail{% endblock %}
+{% block content %}
+<div class="detail-grid">
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Goal</p><h2>{{ goal.title }}</h2></div>{{ status_badge(goal.status) }}</div>
+    <div class="meta-list">
+      <div class="meta-row"><span>User</span><strong>{{ goal.user.email if goal.user else '—' }}</strong></div>
+      <div class="meta-row"><span>Target</span><strong>{{ goal.target_percent }}% reduction</strong></div>
+      <div class="meta-row"><span>Period type</span><strong>{{ goal.period_type }}</strong></div>
+      <div class="meta-row"><span>Active period</span><strong>{{ goal.start_date|fmt_date }} → {{ goal.end_date|fmt_date }}</strong></div>
+      <div class="meta-row"><span>Baseline period</span><strong>{{ goal.baseline_start|fmt_date }} → {{ goal.baseline_end|fmt_date }}</strong></div>
+      <div class="meta-row"><span>Baseline</span><strong>{{ goal.baseline_emissions_grams|kg }} kg CO2e</strong></div>
+      <div class="meta-row"><span>Target</span><strong>{{ goal.target_emissions_grams|kg }} kg CO2e</strong></div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Linked work</p><h2>Plans</h2></div></div>
+    {% if goal.plans.count() %}
+      <div class="list">
+        {% for plan in goal.plans %}
+          <a class="list-row" href="{{ url_for('admin.plan_detail', plan_id=plan.id) }}">
+            <span class="list-main"><strong>{{ plan.title }}</strong><small>{{ plan.actions|length }} actions · {{ plan.status }}</small></span>
+            <span class="badge">{{ plan.source }}</span>
+          </a>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty">No plan linked to this goal yet.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+name: Feature / change
+description: A user-visible feature or a scoped engineering change
+title: "[Feature] "
+labels: ["feature"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Read `agent.md` first. One issue = one branch (`dev/<n>-<slug>`) = one PR.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What user or engineering outcome does this deliver?
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope
+      description: In scope, out of scope, and affected layers (backend / mobile / admin / docs).
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Testable statements. Include EN/AR behaviour where UI is affected.
+      placeholder: |
+        - [ ] ...
+    validations:
+      required: true
+  - type: textarea
+    id: design
+    attributes:
+      label: Design and data notes
+      description: API shape, migration, AI ownership (AI must not invent emission values), screenshots.
+  - type: textarea
+    id: test
+    attributes:
+      label: Test plan
+      description: Commands and manual checks, including coverage impact.
+    validations:
+      required: true
+  - type: checkboxes
+    id: dod
+    attributes:
+      label: Definition of Done
+      options:
+        - label: Docs updated in `docs/` on the same branch
+          required: true
+        - label: Tests added/updated; backend and mobile gates pass
+          required: true
+        - label: No secrets, no mixed `/api/v1` and `/admin` auth
+          required: true

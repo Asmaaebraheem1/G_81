@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import status_badge %}
+{% block title %}{{ document.original_filename }} · CarbonWise Admin{% endblock %}
+{% block page_title %}Document detail{% endblock %}
+{% block content %}
+<div class="detail-grid">
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Private file</p><h2>{{ document.original_filename }}</h2></div>{{ status_badge(document.status) }}</div>
+    <div class="meta-list">
+      <div class="meta-row"><span>User</span><strong>{{ document.user.email if document.user else '—' }}</strong></div>
+      <div class="meta-row"><span>MIME type</span><strong>{{ document.mime_type }}</strong></div>
+      <div class="meta-row"><span>Size</span><strong>{{ (document.size_bytes / 1024)|round(1) }} KB</strong></div>
+      <div class="meta-row"><span>AI consent</span><strong>{{ 'Given' if document.ai_consent else 'Not given' }}</strong></div>
+      <div class="meta-row"><span>Extraction model</span><strong>{{ document.extraction_model or '—' }}</strong></div>
+      <div class="meta-row"><span>Linked record</span><strong>{% if document.record_id %}#{{ document.record_id }}{% else %}—{% endif %}</strong></div>
+      <div class="meta-row"><span>Uploaded</span><strong>{{ document.created_at|fmt_dt }}</strong></div>
+      <div class="meta-row"><span>Confirmed</span><strong>{{ document.confirmed_at|fmt_dt }}</strong></div>
+    </div>
+    <div class="actions" style="margin-top:16px">
+      <a class="btn btn-primary btn-sm" href="{{ url_for('admin.document_download', document_id=document.id) }}">Download file</a>
+      {% if not document.record_id %}
+      <form method="post" action="{{ url_for('admin.document_delete', document_id=document.id) }}" class="inline-form" onsubmit="return confirm('Delete this file permanently?')">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-danger btn-sm" type="submit">Delete file</button>
+      </form>
+      {% endif %}
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Extraction</p><h2>Candidate fields</h2></div></div>
+    {% if document.extraction_json %}
+      <pre class="formula" style="white-space:pre-wrap">{{ document.extraction_json }}</pre>
+      <p class="hint" style="margin-top:10px">These values are suggestions. A record exists only after the user confirms them.</p>
+    {% else %}
+      <p class="empty">No extraction has been run.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

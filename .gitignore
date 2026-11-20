@@ -1,0 +1,49 @@
+# --- secrets / local config ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# --- Python / Flask backend ---
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+instance/
+*.sqlite3
+*.db
+!backend/instance/.gitkeep
+backend/app/static/uploads/
+backend/instance/uploads/
+
+# --- Flutter / Dart mobile ---
+mobile/.dart_tool/
+mobile/.flutter-plugins
+mobile/.flutter-plugins-dependencies
+mobile/.packages
+mobile/build/
+mobile/coverage/
+mobile/android/.gradle/
+mobile/android/local.properties
+mobile/ios/Pods/
+mobile/ios/.symlinks/
+mobile/macos/Pods/
+**/*.g.dart.bak
+*.iml
+.idea/
+.vscode/
+
+# --- OS / editor ---
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# --- agent scratch ---
+*.log
+tmp/

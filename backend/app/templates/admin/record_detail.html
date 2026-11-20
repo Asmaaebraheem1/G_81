@@ -1,0 +1,38 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import status_badge %}
+{% block title %}Record #{{ record.id }} · CarbonWise Admin{% endblock %}
+{% block page_title %}Record #{{ record.id }}{% endblock %}
+{% block content %}
+<div class="detail-grid">
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Backend calculation</p><h2>{{ record.category.name_en if record.category else 'Record' }}</h2></div>{{ status_badge(record.status) }}</div>
+    <div class="formula" style="margin-bottom:16px">{{ record.formula }}</div>
+    <div class="meta-list">
+      <div class="meta-row"><span>User</span><strong>{{ record.user.email if record.user else '—' }}</strong></div>
+      <div class="meta-row"><span>Organization</span><strong>{{ record.organization.name_en if record.organization else '—' }}</strong></div>
+      <div class="meta-row"><span>Activity date</span><strong>{{ record.activity_date|fmt_date }}</strong></div>
+      <div class="meta-row"><span>Quantity</span><strong>{{ '%.4f'|format(record.quantity) }} {{ record.unit }}</strong></div>
+      <div class="meta-row"><span>Factor snapshot</span><strong>{{ record.factor_grams_co2e_snapshot }} g CO2e / {{ record.unit }}</strong></div>
+      <div class="meta-row"><span>Source snapshot</span><strong>{{ record.factor_source_snapshot }}</strong></div>
+      <div class="meta-row"><span>Emissions</span><strong>{{ record.emissions_grams }} g · {{ record.emissions_kg }} kg</strong></div>
+      <div class="meta-row"><span>Source</span><strong>{{ record.source }}</strong></div>
+      <div class="meta-row"><span>Document</span><strong>{% if record.document_id %}#{{ record.document_id }}{% else %}—{% endif %}</strong></div>
+      <div class="meta-row"><span>Notes</span><strong>{{ record.notes or '—' }}</strong></div>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Admin action</p><h2>Moderate</h2></div></div>
+    <p class="muted small" style="margin-bottom:12px">Soft delete keeps the row for audit. Flagged records remain visible but are excluded from totals.</p>
+    <form method="post" action="{{ url_for('admin.record_status', record_id=record.id) }}" class="stack">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <label class="field"><span>Status</span>
+        <select name="status" class="input">
+          {% for option in ['active','flagged','deleted'] %}<option value="{{ option }}" {{ 'selected' if record.status == option }}>{{ option|title }}</option>{% endfor %}
+        </select>
+      </label>
+      <button class="btn btn-primary" type="submit">Update status</button>
+    </form>
+    <div class="callout" style="margin-top:14px"><strong>Snapshot rule.</strong> The factor value and source on this record are frozen. Editing the catalog does not change this total.</div>
+  </section>
+</div>
+{% endblock %}

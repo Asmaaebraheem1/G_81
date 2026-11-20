@@ -1,0 +1,68 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import pager, status_badge %}
+{% block title %}AI monitor · CarbonWise Admin{% endblock %}
+{% block page_title %}AI monitor{% endblock %}
+{% block content %}
+<section class="kpi-grid" style="grid-template-columns:repeat(4,minmax(0,1fr))">
+  <article class="kpi"><p>Total AI calls</p><strong>{{ stats.calls }}</strong><span>metadata only</span></article>
+  <article class="kpi"><p>Tokens today</p><strong>{{ '{:,}'.format(stats.today_tokens) }}</strong><span>demo budget guard</span></article>
+  <article class="kpi"><p>Errors</p><strong>{{ stats.errors }}</strong><span>typed failures</span></article>
+  <article class="kpi kpi-accent"><p>Open flags</p><strong>{{ stats.open_flags }}</strong><span>user-reported</span></article>
+</section>
+
+<section class="card">
+  <div class="card-head"><div><p class="eyebrow">Provider policy</p><h2>openrouter/free only</h2></div><span class="badge badge-ai">no paid fallback</span></div>
+  <div class="callout"><strong>Privacy:</strong> prompts are never stored in usage rows. Request hashes are metadata. Reported responses are redacted before admin review. {{ disclaimer }}</div>
+</section>
+
+<section class="card">
+  <div class="card-head"><div><p class="eyebrow">Metadata</p><h2>Recent AI usage</h2></div></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>When</th><th>Feature</th><th>Model</th><th class="numeric">Tokens</th><th class="numeric">Latency</th><th>Status</th><th>Error</th></tr></thead>
+      <tbody>
+      {% for row in usage.items %}
+        <tr>
+          <td>{{ row.created_at|fmt_dt }}</td>
+          <td>{{ row.feature }}</td>
+          <td><small>{{ row.model }}</small></td>
+          <td class="numeric">{{ row.total_tokens }}</td>
+          <td class="numeric">{{ row.latency_ms }} ms</td>
+          <td>{{ status_badge(row.status) }}</td>
+          <td><small>{{ row.error_code or '—' }}</small></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="7" class="empty">No AI usage yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {{ pager(usage, 'admin.ai_monitor') }}
+</section>
+
+<section class="card">
+  <div class="card-head"><div><p class="eyebrow">User reports</p><h2>Flagged responses</h2><p class="muted">Redacted excerpts only. Resolve or dismiss after review.</p></div></div>
+  {% for flag in flags %}
+    <article class="card" style="box-shadow:none; margin-bottom:12px; background:#fbfdfc">
+      <div class="card-head"><div><p class="eyebrow">Flag #{{ flag.id }} · {{ flag.created_at|fmt_dt }}</p><h3>{{ flag.reason|replace('_',' ')|title }}</h3></div>{{ status_badge(flag.status) }}</div>
+      {% if flag.message %}<div class="formula" style="background:#f4f7f5; color:#30463b">{{ flag.message.content|redact|truncate(420) }}</div>{% endif %}
+      {% if flag.admin_notes %}<p class="hint" style="margin-top:8px">User notes: {{ flag.admin_notes }}</p>{% endif %}
+      {% if flag.status == 'open' %}
+      <form method="post" action="{{ url_for('admin.ai_flag_resolve', flag_id=flag.id) }}" style="margin-top:12px">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="toolbar">
+          <select name="status" class="input">
+            <option value="reviewed">Reviewed</option>
+            <option value="dismissed">Dismissed</option>
+          </select>
+          <input class="input" type="text" name="admin_notes" placeholder="Admin notes (optional)">
+          <button class="btn btn-primary btn-sm" type="submit">Resolve</button>
+        </div>
+      </form>
+      {% endif %}
+    </article>
+  {% else %}
+    <p class="empty">No flagged responses. Good.</p>
+  {% endfor %}
+</section>
+{% endblock %}

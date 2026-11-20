@@ -1,0 +1,40 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import pager, status_badge %}
+{% block title %}Users · CarbonWise Admin{% endblock %}
+{% block page_title %}Users{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="card-head">
+    <div><p class="eyebrow">Accounts</p><h2>Search and manage users</h2></div>
+    <form class="toolbar" method="get">
+      <input class="input" type="search" name="q" value="{{ q }}" placeholder="Email or name">
+      <select name="status">
+        <option value="">All statuses</option>
+        <option value="active" {{ 'selected' if status == 'active' }}>Active</option>
+        <option value="suspended" {{ 'selected' if status == 'suspended' }}>Suspended</option>
+      </select>
+      <button class="btn btn-primary btn-sm" type="submit">Filter</button>
+    </form>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>User</th><th>Type</th><th>Organization</th><th>Status</th><th>Created</th><th></th></tr></thead>
+      <tbody>
+      {% for user in pagination.items %}
+        <tr>
+          <td><strong>{{ user.full_name }}</strong><br><small>{{ user.email }}</small></td>
+          <td><span class="badge">{{ user.account_type }}</span></td>
+          <td>{% if user.organization %}{{ user.organization.name_en }}{% else %}—{% endif %}</td>
+          <td>{{ status_badge('active' if user.is_active else 'suspended') }}</td>
+          <td>{{ user.created_at|fmt_date }}</td>
+          <td><a class="btn btn-ghost btn-sm" href="{{ url_for('admin.user_detail', user_id=user.id) }}">Open</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">No users match this filter.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {{ pager(pagination, 'admin.users') }}
+</section>
+{% endblock %}
