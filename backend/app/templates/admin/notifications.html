@@ -1,0 +1,27 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import status_badge %}
+{% block title %}Notifications · CarbonWise Admin{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="card-head"><div><p class="eyebrow">In-app</p><h2>Announcements and reminders</h2><p class="muted">Broadcasts create one row per active user; read state is per user.</p></div><a class="btn btn-primary" href="{{ url_for('admin.notification_new') }}">Send notification</a></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Title</th><th>Type</th><th>User</th><th>Read</th><th>Created</th></tr></thead>
+      <tbody>
+      {% for row in notifications %}
+        <tr>
+          <td><strong>{{ row.title_en }}</strong><br><small dir="rtl">{{ row.title_ar }}</small></td>
+          <td><span class="badge">{{ row.type }}</span></td>
+          <td><small>{{ row.user.email if row.user else '—' }}</small></td>
+          <td>{{ status_badge('read' if row.is_read else 'unread') }}</td>
+          <td>{{ row.created_at|fmt_dt }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="empty">No notifications yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Project rules
+    url: https://github.com/Asmaaebraheem1/G_81/blob/main/agent.md
+    about: Read the working rules before opening an issue.
+  - name: Documentation
+    url: https://github.com/Asmaaebraheem1/G_81/blob/main/docs/README.md
+    about: Architecture, API, data model, features, and test strategy.

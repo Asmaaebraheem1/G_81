@@ -1,0 +1,28 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import field %}
+{% block title %}{{ 'New category' if mode == 'new' else 'Edit category' }} · CarbonWise Admin{% endblock %}
+{% block page_title %}{{ 'New category' if mode == 'new' else 'Edit category' }}{% endblock %}
+{% block content %}
+<section class="card" style="max-width:860px">
+  <div class="card-head"><div><p class="eyebrow">Catalog</p><h2>Category details</h2><p class="muted">Both languages are required for the mobile app.</p></div><a class="link" href="{{ url_for('admin.categories') }}">Back to categories</a></div>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div class="form-grid">
+      <div>{{ field(form.key) }}</div>
+      <div>{{ field(form.sort_order) }}</div>
+      <div>{{ field(form.name_en) }}</div>
+      <div>{{ field(form.name_ar) }}</div>
+      <div class="span-2">{{ field(form.description_en) }}</div>
+      <div class="span-2">{{ field(form.description_ar) }}</div>
+      <div>{{ field(form.icon) }}</div>
+      <div>{{ field(form.color_hex) }}</div>
+      <div>{{ field(form.unit_hint) }}</div>
+      <div><label class="check" style="margin-top:24px">{{ form.is_active() }} Active in catalog</label></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">{{ form.submit.label.text }}</button>
+      <a class="btn btn-ghost" href="{{ url_for('admin.categories') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

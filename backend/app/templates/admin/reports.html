@@ -1,0 +1,74 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import status_badge %}
+{% block title %}Reports · CarbonWise Admin{% endblock %}
+{% block page_title %}Reports{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="card-head">
+    <div><p class="eyebrow">Platform-wide</p><h2>Calculated emissions</h2><p class="muted">All active records; deleted and flagged rows are excluded.</p></div>
+    <form class="toolbar" method="get">
+      <input class="input" type="date" name="from" value="{{ start.isoformat() }}">
+      <input class="input" type="date" name="to" value="{{ end.isoformat() }}">
+      <button class="btn btn-primary btn-sm" type="submit">Apply</button>
+      <a class="btn btn-ghost btn-sm" href="{{ url_for('admin.reports_export', **{'from': start.isoformat(), 'to': end.isoformat()}) }}">Export CSV</a>
+    </form>
+  </div>
+  <div class="kpi-grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+    <article class="kpi"><p>Total emissions</p><strong>{{ total|kg }} kg</strong><span>{{ start|fmt_date }} → {{ end|fmt_date }}</span></article>
+    <article class="kpi"><p>Contributing users</p><strong>{{ user_count }}</strong><span>distinct accounts</span></article>
+    <article class="kpi"><p>Top category</p><strong>{{ categories[0].name if categories else '—' }}</strong><span>{{ categories[0].share ~ '%' if categories else 'no data' }}</span></article>
+  </div>
+</section>
+
+<section class="grid-2">
+  <article class="card">
+    <div class="card-head"><div><p class="eyebrow">Mix</p><h2>Category share</h2></div></div>
+    {% if categories %}
+      <div class="bar-list">
+        {% for row in categories %}
+          <div class="bar-row">
+            <div class="bar-label"><span>{{ row.name }}</span><small>{{ row.grams|kg }} kg · {{ row.share }}%</small></div>
+            <div class="bar-track"><div class="bar-fill" style="width: {{ row.share }}%; background: {{ row.color }}"></div></div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}<p class="empty">No data in this window.</p>{% endif %}
+  </article>
+  <article class="card">
+    <div class="card-head"><div><p class="eyebrow">Trend</p><h2>Last six months</h2></div></div>
+    {% set max_month = monthly|map(attribute='grams')|max %}
+    {% if max_month %}
+      <div class="bar-list">
+        {% for row in monthly %}
+          <div class="bar-row">
+            <div class="bar-label"><span>{{ row.label }}</span><small>{{ row.grams|kg }} kg</small></div>
+            <div class="bar-track"><div class="bar-fill" style="width: {{ (row.grams / max_month * 100)|round(1) }}%; background:#2f8f6b"></div></div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}<p class="empty">No trend data.</p>{% endif %}
+  </article>
+</section>
+
+<section class="card">
+  <div class="card-head"><div><p class="eyebrow">Hotspots</p><h2>Top activities</h2></div></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Activity</th><th>Unit</th><th class="numeric">Records</th><th class="numeric">kg CO2e</th><th class="numeric">Share</th></tr></thead>
+      <tbody>
+      {% for row in top %}
+        <tr>
+          <td><strong>{{ row.name_en }}</strong><br><small>{{ row.name_ar }}</small></td>
+          <td>{{ row.unit }}</td>
+          <td class="numeric">{{ row.records }}</td>
+          <td class="numeric mono">{{ row.grams|kg }}</td>
+          <td class="numeric">{{ ((row.grams / total * 100) if total else 0)|round(1) }}%</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="empty">No activities in this window.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

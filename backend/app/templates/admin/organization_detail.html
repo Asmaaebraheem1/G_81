@@ -1,0 +1,56 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import status_badge %}
+{% block title %}{{ org.name_en }} · CarbonWise Admin{% endblock %}
+{% block page_title %}Organization detail{% endblock %}
+{% block content %}
+<div class="detail-grid">
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Organization</p><h2>{{ org.name_en }}</h2><p class="muted">{{ org.name_ar or '' }}</p></div><div class="tag-list">{{ status_badge('verified' if org.is_verified else 'pending') }}{{ status_badge('active' if org.is_active else 'suspended') }}</div></div>
+    <div class="meta-list">
+      <div class="meta-row"><span>Slug</span><strong class="mono">{{ org.slug }}</strong></div>
+      <div class="meta-row"><span>Type / industry</span><strong>{{ org.org_type }} · {{ org.industry or '—' }}</strong></div>
+      <div class="meta-row"><span>Location</span><strong>{{ org.city or '—' }}{% if org.country %}, {{ org.country }}{% endif %}</strong></div>
+      <div class="meta-row"><span>Size</span><strong>{{ org.size or '—' }}</strong></div>
+      <div class="meta-row"><span>Contact</span><strong>{{ org.contact_email or '—' }}</strong></div>
+      <div class="meta-row"><span>Created</span><strong>{{ org.created_at|fmt_dt }}</strong></div>
+    </div>
+    <div class="actions" style="margin-top:16px">
+      <form method="post" action="{{ url_for('admin.organization_action', org_id=org.id) }}" class="inline-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-ghost btn-sm" name="action" value="{{ 'unverify' if org.is_verified else 'verify' }}" type="submit">{{ 'Unverify' if org.is_verified else 'Verify' }}</button>
+      </form>
+      <form method="post" action="{{ url_for('admin.organization_action', org_id=org.id) }}" class="inline-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-danger btn-sm" name="action" value="{{ 'suspend' if org.is_active else 'activate' }}" type="submit">{{ 'Suspend' if org.is_active else 'Activate' }}</button>
+      </form>
+    </div>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Scope</p><h2>At a glance</h2></div></div>
+    <div class="meta-list">
+      <div class="meta-row"><span>Users</span><strong>{{ users|length }}</strong></div>
+      <div class="meta-row"><span>Active records</span><strong>{{ record_count }}</strong></div>
+      <div class="meta-row"><span>Goals</span><strong>{{ goal_count }}</strong></div>
+    </div>
+  </section>
+</div>
+<section class="card" style="margin-top:16px">
+  <div class="card-head"><div><p class="eyebrow">Members</p><h2>Users in this organization</h2></div></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Owner</th><th>Status</th><th></th></tr></thead>
+      <tbody>
+      {% for user in users %}
+        <tr>
+          <td>{{ user.full_name }}</td><td>{{ user.email }}</td><td>{{ 'Yes' if user.is_org_owner else 'No' }}</td>
+          <td>{{ status_badge('active' if user.is_active else 'suspended') }}</td>
+          <td><a class="link" href="{{ url_for('admin.user_detail', user_id=user.id) }}">Open</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="empty">No members.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

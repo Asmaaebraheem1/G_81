@@ -1,0 +1,29 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import field %}
+{% block title %}{{ 'New article' if mode == 'new' else 'Edit article' }} · CarbonWise Admin{% endblock %}
+{% block page_title %}{{ 'New article' if mode == 'new' else 'Edit article' }}{% endblock %}
+{% block content %}
+<section class="card" style="max-width:1000px">
+  <div class="card-head"><div><p class="eyebrow">Education</p><h2>Article content</h2><p class="muted">Plain text/markdown-lite. Both languages are required.</p></div><a class="link" href="{{ url_for('admin.content') }}">Back to content</a></div>
+  <form method="post">
+    {{ form.hidden_tag() }}
+    <div class="form-grid">
+      <div>{{ field(form.slug) }}</div>
+      <div>{{ field(form.category) }}</div>
+      <div>{{ field(form.title_en) }}</div>
+      <div>{{ field(form.title_ar) }}</div>
+      <div class="span-2">{{ field(form.summary_en) }}</div>
+      <div class="span-2">{{ field(form.summary_ar) }}</div>
+      <div class="span-2">{{ field(form.body_en) }}</div>
+      <div class="span-2">{{ field(form.body_ar) }}</div>
+      <div>{{ field(form.image_path) }}</div>
+      <div>{{ field(form.sort_order) }}</div>
+      <div><label class="check">{{ form.is_published() }} Published</label></div>
+    </div>
+    <div class="form-actions">
+      <button class="btn btn-primary" type="submit">{{ form.submit.label.text }}</button>
+      <a class="btn btn-ghost" href="{{ url_for('admin.content') }}">Cancel</a>
+    </div>
+  </form>
+</section>
+{% endblock %}

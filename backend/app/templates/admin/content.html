@@ -1,0 +1,40 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import status_badge %}
+{% block title %}Content · CarbonWise Admin{% endblock %}
+{% block page_title %}Content{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="card-head"><div><p class="eyebrow">Education</p><h2>Bilingual articles</h2><p class="muted">Published articles appear in the mobile Learn tab.</p></div><a class="btn btn-primary" href="{{ url_for('admin.content_new') }}">New article</a></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Article</th><th>Slug</th><th>Category</th><th>Status</th><th>Published</th><th></th></tr></thead>
+      <tbody>
+      {% for row in articles %}
+        <tr>
+          <td><strong>{{ row.title_en }}</strong><br><small dir="rtl">{{ row.title_ar }}</small></td>
+          <td class="mono">{{ row.slug }}</td>
+          <td>{{ row.category or '—' }}</td>
+          <td>{{ status_badge('published' if row.is_published else 'draft') }}</td>
+          <td>{{ row.published_at|fmt_date }}</td>
+          <td>
+            <div class="actions">
+              <a class="btn btn-ghost btn-sm" href="{{ url_for('admin.content_edit', article_id=row.id) }}">Edit</a>
+              <form method="post" action="{{ url_for('admin.content_toggle', article_id=row.id) }}" class="inline-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-ghost btn-sm" type="submit">{{ 'Unpublish' if row.is_published else 'Publish' }}</button>
+              </form>
+              <form method="post" action="{{ url_for('admin.content_delete', article_id=row.id) }}" class="inline-form" onsubmit="return confirm('Delete this article?')">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button class="btn btn-danger btn-sm" type="submit">Delete</button>
+              </form>
+            </div>
+          </td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6" class="empty">No articles yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

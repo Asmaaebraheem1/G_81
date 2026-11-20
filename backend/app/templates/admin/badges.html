@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+{% block title %}Badges · CarbonWise Admin{% endblock %}
+{% block page_title %}Badges{% endblock %}
+{% block content %}
+<section class="card">
+  <div class="card-head"><div><p class="eyebrow">Achievements</p><h2>Badge definitions</h2><p class="muted">Human-readable criteria; awards are recorded per user.</p></div><a class="btn btn-primary" href="{{ url_for('admin.badge_new') }}">New badge</a></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Badge</th><th>Key</th><th>Criteria</th><th class="numeric">Points</th><th></th></tr></thead>
+      <tbody>
+      {% for row in badges %}
+        <tr>
+          <td><strong>{{ row.title_en }}</strong><br><small dir="rtl">{{ row.title_ar }}</small></td>
+          <td class="mono">{{ row.key }}</td>
+          <td><small>{{ row.criteria }}</small></td>
+          <td class="numeric">{{ row.points }}</td>
+          <td><a class="btn btn-ghost btn-sm" href="{{ url_for('admin.badge_edit', badge_id=row.id) }}">Edit</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5" class="empty">No badges yet.</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+{% endblock %}

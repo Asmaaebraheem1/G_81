@@ -1,0 +1,91 @@
+{% extends "admin/base.html" %}
+{% from "admin/_macros.html" import field, status_badge %}
+{% block title %}Settings · CarbonWise Admin{% endblock %}
+{% block page_title %}Settings{% endblock %}
+{% block content %}
+<div class="detail-grid">
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Your account</p><h2>Admin profile</h2></div><span class="role-pill">{{ (current_role or '')|replace('_',' ')|title }}</span></div>
+    <form method="post" action="{{ url_for('admin.settings') }}">
+      {{ form.hidden_tag() }}
+      {{ field(form.name) }}
+      {{ field(form.email) }}
+      {{ field(form.password) }}
+      <p class="hint">Leave the password blank to keep the current one.</p>
+      <div class="form-actions"><button class="btn btn-primary" type="submit">{{ form.submit.label.text }}</button></div>
+    </form>
+  </section>
+  <section class="card">
+    <div class="card-head"><div><p class="eyebrow">Guardrails</p><h2>Platform policies</h2></div></div>
+    <ul class="checklist">
+      <li><strong>Free AI only.</strong> The model is pinned to <span class="mono">openrouter/free</span>; startup rejects anything else.</li>
+      <li><strong>No prompt logs.</strong> Usage stores tokens, latency, status, and a request hash.</li>
+      <li><strong>SQLite only.</strong> Startup rejects a non-SQLite database URL.</li>
+      <li><strong>Private uploads.</strong> Downloads go through authenticated routes.</li>
+    </ul>
+  </section>
+</div>
+
+{% if current_role == 'super_admin' %}
+<section class="card" style="margin-top:16px">
+  <div class="card-head"><div><p class="eyebrow">Access</p><h2>Admin accounts</h2></div><span class="badge">{{ admins|length }} admins</span></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Last login</th><th></th></tr></thead>
+      <tbody>
+      {% for admin in admins %}
+        <tr>
+          <td>{{ admin.name }}</td><td>{{ admin.email }}</td>
+          <td><span class="badge">{{ admin.role }}</span></td>
+          <td>{{ status_badge('active' if admin.is_active else 'suspended') }}</td>
+          <td>{{ admin.last_login_at|fmt_dt }}</td>
+          <td>
+            {% if admin.id != current_admin.id %}
+            <form method="post" action="{{ url_for('admin.toggle_admin', admin_id=admin.id) }}" class="inline-form">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn btn-ghost btn-sm" type="submit">{{ 'Deactivate' if admin.is_active else 'Activate' }}</button>
+            </form>
+            {% else %}<small class="muted">You</small>{% endif %}
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <form method="post" action="{{ url_for('admin.create_admin') }}" style="margin-top:16px">
+    {{ admin_form.hidden_tag() }}
+    <div class="form-grid">
+      <div>{{ field(admin_form.name) }}</div>
+      <div>{{ field(admin_form.email) }}</div>
+      <div>{{ field(admin_form.role) }}</div>
+      <div>{{ field(admin_form.password) }}</div>
+    </div>
+    <button class="btn btn-primary btn-sm" type="submit">Create admin</button>
+  </form>
+</section>
+
+<section class="card" style="margin-top:16px">
+  <div class="card-head"><div><p class="eyebrow">Runtime</p><h2>Platform settings</h2><p class="muted">String/JSON values editable by a super admin.</p></div></div>
+  {% if settings_rows %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Key</th><th>Value</th><th>Updated</th></tr></thead>
+      <tbody>
+      {% for row in settings_rows %}
+        <tr><td class="mono">{{ row.key }}</td><td>{{ row.value|truncate(160) }}</td><td>{{ row.updated_at|fmt_dt }}</td></tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}<p class="empty">No overrides yet. Defaults come from environment configuration.</p>{% endif %}
+  <form method="post" action="{{ url_for('admin.save_setting') }}" style="margin-top:16px">
+    {{ setting_form.hidden_tag() }}
+    <div class="form-grid">
+      <div>{{ field(setting_form.key) }}</div>
+      <div>{{ field(setting_form.value) }}</div>
+    </div>
+    <button class="btn btn-primary btn-sm" type="submit">Save setting</button>
+  </form>
+</section>
+{% endif %}
+{% endblock %}
