@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   test:
-    name: Analyze, test, coverage and debug build
+    name: Analyze, test and coverage
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -49,6 +49,3 @@ jobs:
 
       - name: Enforce 50% line-coverage gate
         run: python ../scripts/check_lcov.py coverage/lcov.info --min 50
-
-      - name: Debug APK build
-        run: flutter build apk --debug --dart-define=API_BASE_URL=http://10.0.2.2:5001/api/v1

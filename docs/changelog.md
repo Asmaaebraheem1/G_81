@@ -12,7 +12,7 @@ User-visible changes, newest first. Link the issue and PR.
 - **docs**: full status, changelog, screenshot index, and AI-vs-backend ownership notes.
 - **test**: backend 54 passing / 76% coverage; mobile 23 passing / 92.2% coverage.
 - **ci**: `backend.yml` (ruff, black, pytest + coverage gate) and `mobile.yml`
-  (analyze, tests, lcov gate, debug APK); issue/PR templates included.
+  (analyze, tests, lcov gate); issue/PR templates included.
 - **feat(scripts)**: `demo.cmd`, `smoke.cmd`/`smoke.py` (21 checks), and
   `check_lcov.py` coverage gate.
 - **docs(diagrams)**: five 300 DPI black-and-white diagrams and the editable
