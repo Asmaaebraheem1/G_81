@@ -19,6 +19,8 @@ User-visible changes, newest first. Link the issue and PR.
   Pillow generator (`docs/diagrams/generate_diagrams.py`).
 - **docs(assets)**: 15 original flat WebP illustrations with provenance and
   credits (`docs/assets/README.md`, `credits.md`).
+- **docs**: final post-merge status, issue index (#1–#22), CI evidence, and
+  remaining screenshot gaps.
 - **chore**: project scaffolding, CI workflows, issue/PR templates, scripts.
 - **feat(core)**: CarbonWise backend, mobile app, admin dashboard, and AI integration.
 

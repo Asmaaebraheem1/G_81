@@ -39,7 +39,7 @@ Current state of the project. Update in the same PR as the change.
 | Ruff / Black | clean (`ruff check`, `black --check`, 95 files) |
 | Flutter analyze | **No issues found** (0 errors, 0 infos) |
 | L10n parity | **310 EN / 310 AR** keys, no gaps (`mobile/tool/check_l10n.py`) |
-| CI | workflows committed; first run happens after the repository is pushed |
+| CI | backend + mobile workflows green on PR #2 (latest commit); both also run on `main` pushes |
 | Smoke script | `scripts/smoke.cmd` passes 21 checks against the running backend (health, login, auth/me, catalog, records, goals, dashboard, AI status, 401, admin login) |
 | Demo | `docs/demo-script.md` verified against the running app |
 | Diagrams | five 300 DPI black-and-white PNGs + editable generator in `docs/diagrams/` |
@@ -50,19 +50,18 @@ Current state of the project. Update in the same PR as the change.
 
 - Failure/loading/empty screenshot variants and the Arabic welcome/register
   screens are not captured yet; see the gap table in `docs/screenshots/README.md`.
-- Analyzer is clean: **0 errors and 0 infos**. The previous style lints were fixed
-  with mounted guards, null-aware collection elements, and interpolation cleanups.
 - The OpenRouter key is intentionally blank in the demo environment, so AI
   screens are captured in deterministic fallback mode (`ai_disabled` /
   rules-based summaries). Production deployment requires a server-side key.
-- GitHub issues/PRs are created in the repository workflow; the local demo
-  remains the source of truth until the remote is published.
+- Hosted CI no longer builds the APK: the runner cannot resolve Flutter's future
+  Kotlin 2.2.21 Gradle artifacts. The debug APK is built and installed locally on
+  Windows; CI enforces analyzer, tests and the mobile coverage gate.
 
 ## Next
 
-1. Publish the repository and run both CI workflows green on PR #1.
-2. Regenerate the deferred screenshot variants at the next UI freeze (emulator intentionally
-   stopped on the low-resource development machine).
-3. Record the final demo walkthrough and attach it to the release notes.
+1. Regenerate the deferred screenshot variants at the next UI freeze (emulator
+   intentionally stopped on the low-resource development machine).
+2. Record the final demo walkthrough and attach it to the release notes.
+3. Open follow-up issues for the out-of-scope items in `docs/00-overview.md`.
 
-Related: #1
+Related: #1, #22
