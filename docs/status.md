@@ -45,6 +45,7 @@ Current state of the project. Update in the same PR as the change.
 | Diagrams | five 300 DPI black-and-white PNGs + editable generator in `docs/diagrams/` |
 | Screenshots | 29 admin + 27 EN + 26 AR mobile images; remaining state gaps are listed in `docs/screenshots/README.md` |
 | Visual assets | 15 original WebP illustrations in both mobile and admin asset folders, with credits in `docs/assets/credits.md` |
+| Arabic report | `docs/reports/CarbonWise-Project-Report-AR.docx` — Arabic RTL Word report covering the idea, features, diagrams, technologies and verification (#24) |
 
 ## Known gaps
 

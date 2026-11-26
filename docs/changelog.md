@@ -4,6 +4,8 @@ User-visible changes, newest first. Link the issue and PR.
 
 ## Unreleased
 
+- **docs(report)**: Arabic RTL Word project report covering the idea, features,
+  technology choices, diagrams, AI guardrails and verification evidence (#24).
 - **feat(mobile)**: complete EN/AR UI with RTL bidi handling for numerics, factors,
   plans, alternatives, insights, challenges, leaderboard, documents, and content.
 - **feat(mobile)**: bilingual status/category labels, localized `kg` units, and

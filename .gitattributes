@@ -7,6 +7,8 @@
 *.ico binary
 *.sqlite3 binary
 *.pdf binary
+*.docx binary
+*.xlsx binary
 
 *.cmd text eol=crlf
 *.bat text eol=crlf

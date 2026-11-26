@@ -22,6 +22,7 @@ AI is OpenRouter `openrouter/free`, backend only.
 10. [demo-script.md](demo-script.md) — the client demo and fallbacks
 11. [ai-features.md](ai-features.md) — the AI contract and limitations
 12. [diagrams/README.md](diagrams/README.md) · [screenshots/README.md](screenshots/README.md) — required visual deliverables
+13. [reports/README.md](reports/README.md) — Arabic Word project report
 
 ## Index
 
@@ -48,6 +49,7 @@ AI is OpenRouter `openrouter/free`, backend only.
 | [diagrams/README.md](diagrams/README.md) | Five black-and-white diagrams |
 | [screenshots/README.md](screenshots/README.md) | Complete screenshot library |
 | [assets/README.md](assets/README.md) | Visual assets + credits |
+| [reports/README.md](reports/README.md) | Arabic Word project report |
 
 ## Facts that must never drift
 
@@ -62,4 +64,4 @@ AI is OpenRouter `openrouter/free`, backend only.
 | AI | OpenRouter `openrouter/free` only, backend only, best-effort vision |
 | Payments | None in v1 |
 | Emissions unit | kg CO2e displayed; integer grams stored |
-| Deployment | local demo (`127.0.0.1:5000`, emulator `10.0.2.2:5000`) |
+| Deployment | local demo (`127.0.0.1:5001`, emulator `10.0.2.2:5001`; port 5000 is used by another local app) |
