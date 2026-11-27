@@ -4,6 +4,10 @@ User-visible changes, newest first. Link the issue and PR.
 
 ## Unreleased
 
+- **docs(report)**: add the two-page Arabic project-idea sheet
+  `docs/reports/G_81-Project-Idea-AR.docx` — one half-page idea paragraph on
+  page 1 and technology names only on page 2, with the project number `G_81`
+  in the file name and header (#26).
 - **docs(report)**: Arabic RTL Word project report covering the idea, features,
   technology choices, diagrams, AI guardrails and verification evidence (#24).
 - **feat(mobile)**: complete EN/AR UI with RTL bidi handling for numerics, factors,

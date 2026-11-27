@@ -125,6 +125,7 @@ Latest local results: backend **54 tests / 76%**, mobile **23 tests / 92.2%**, a
 | API reference | [`docs/06-api-reference.md`](docs/06-api-reference.md) |
 | Data model / ERD notes | [`docs/05-data-model.md`](docs/05-data-model.md) |
 | Arabic project report (Word) | [`docs/reports/CarbonWise-Project-Report-AR.docx`](docs/reports/CarbonWise-Project-Report-AR.docx) |
+| Arabic project-idea sheet (Word) | [`docs/reports/G_81-Project-Idea-AR.docx`](docs/reports/G_81-Project-Idea-AR.docx) |
 
 <img src="docs/diagrams/01-context.png" width="720" alt="CarbonWise context diagram">
 
