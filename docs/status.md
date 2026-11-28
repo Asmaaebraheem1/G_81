@@ -46,6 +46,7 @@ Current state of the project. Update in the same PR as the change.
 | Screenshots | 29 admin + 27 EN + 26 AR mobile images; remaining state gaps are listed in `docs/screenshots/README.md` |
 | Visual assets | 15 original WebP illustrations in both mobile and admin asset folders, with credits in `docs/assets/credits.md` |
 | Arabic report | `docs/reports/CarbonWise-Project-Report-AR.docx` — Arabic RTL Word report covering the idea, features, diagrams, technologies and verification (#24) |
+| Arabic one-pager | `docs/reports/G_81-Project-Idea-AR.docx` — two-page Arabic RTL sheet: half-page idea paragraph + technology names only (#26) |
 
 ## Known gaps
 
